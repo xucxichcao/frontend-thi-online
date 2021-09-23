@@ -1,11 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/sign-in">Sign in</router-link> |
-      <router-link to="/sign-up">Sign up</router-link>
-    </div>
     <router-view />
   </div>
 </template>
@@ -30,5 +24,18 @@
       color: #42b983;
     }
   }
+}
+.h-layout {
+  background: #f0f2f5;
+}
+.layout-logo {
+  height: 34px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 24px;
+}
+.h-layout-footer {
+  padding: 24px 50px;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
 }
 </style>
