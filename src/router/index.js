@@ -26,6 +26,14 @@ const routes = [
             component: () =>
               import("../components/home/dashboardTest/testList.vue"),
           },
+          {
+            path: "/test-detail/:id",
+            name: "Test detail",
+            props: true,
+            meta: { requireAuth: true },
+            component: () =>
+              import("../components/home/dashboardTest/testDetail.vue"),
+          },
         ],
       },
     ],
