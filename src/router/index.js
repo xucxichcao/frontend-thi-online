@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -8,31 +7,37 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
-    meta: { requireAuth: true, breadCrumb: "Home" },
+    props: true,
+    meta: { requireAuth: true, name: "Trang chủ" },
+    component: () => import("../views/Home.vue"),
     children: [
       {
         path: "",
-        name: "Default home",
+        name: "Home core",
         props: true,
-        meta: { requireAuth: true },
+        meta: { requireAuth: true, name: "Trang chủ" },
         component: () => import("../components/home/core.vue"),
+      },
+      {
+        path: "/test",
+        name: "Test core",
+        props: true,
+        meta: { requireAuth: true, name: "Bài thi" },
+        component: () => import("../components/test/core.vue"),
         children: [
           {
             path: "",
             name: "Test list",
             props: true,
-            meta: { requireAuth: true },
-            component: () =>
-              import("../components/home/dashboardTest/testList.vue"),
+            meta: { requireAuth: true, name: "Bài thi" },
+            component: () => import("../components/test/testList.vue"),
           },
           {
-            path: "/test-detail/:id",
+            path: "/test/:testId",
             name: "Test detail",
             props: true,
-            meta: { requireAuth: true },
-            component: () =>
-              import("../components/home/dashboardTest/testDetail.vue"),
+            meta: { requireAuth: true, name: "Chi tiết bài thi" },
+            component: () => import("../components/test/testDetail.vue"),
           },
         ],
       },

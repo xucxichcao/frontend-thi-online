@@ -29,7 +29,10 @@
           </div>
         </HHeader>
         <Content style="padding: 0px 30px">
-          <Breadcrumb :datas="datas" style="margin: 15px 0px"></Breadcrumb>
+          <Breadcrumb
+            :datas="breadCrumbs"
+            style="margin: 15px 0px"
+          ></Breadcrumb>
 
           <router-view :key="$route.path"></router-view>
 
@@ -62,21 +65,25 @@ export default {
         },
         { title: "task", icon: "h-icon-task", key: "task" },
       ],
-      datas: [
-        { icon: "h-icon-home" },
-        {
-          title: "Component",
-          icon: "h-icon-complete",
-          route: { name: "Test list" },
-        },
-        { title: "Breadcrumb", icon: "h-icon-star" },
-      ],
     };
   },
   computed: {
     breadCrumbs() {
       let pathArray = this.$route.path.split("/");
-      return pathArray;
+      let breadCrumbArray = [
+        { title: "Trang chủ", route: { name: "Home core" } },
+      ];
+      pathArray.forEach((e, i) => {
+        if (i === pathArray.length - 1 && e !== "") {
+          breadCrumbArray.push({ title: this.$route.matched[i].meta.name });
+        } else if (e !== "") {
+          breadCrumbArray.push({
+            title: this.$route.matched[i].meta.name,
+            route: this.$route.matched[i].path,
+          });
+        }
+      });
+      return breadCrumbArray;
     },
   },
 };

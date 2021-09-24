@@ -4,7 +4,7 @@
       <div class="h-panel-body">
         <Row :space="40">
           <Cell width="17" :xs="24" :sm="24" :md="24">
-            <router-view></router-view>
+            <test-list />
           </Cell>
           <Cell width="7" :xs="0" :sm="0" :md="0">
             <div class="h-panel">
@@ -18,7 +18,10 @@
 </template>
 
 <script>
-export default {};
+import testList from "./dashboardTest/testList.vue";
+export default {
+  components: { testList },
+};
 </script>
 
 <style></style>
