@@ -9,6 +9,26 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: { requireAuth: true, breadCrumb: "Home" },
+    children: [
+      {
+        path: "",
+        name: "Default home",
+        props: true,
+        meta: { requireAuth: true },
+        component: () => import("../components/home/core.vue"),
+        children: [
+          {
+            path: "",
+            name: "Test list",
+            props: true,
+            meta: { requireAuth: true },
+            component: () =>
+              import("../components/home/dashboardTest/testList.vue"),
+          },
+        ],
+      },
+    ],
   },
   {
     path: "/about",

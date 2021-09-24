@@ -1,5 +1,5 @@
 <template>
-  <Row class="signin" type="flex" space="20" justify="center" space-x="12">
+  <Row id="signup" type="flex" space="20" justify="center">
     <Cell :xs="22" :sm="20" :md="18" width="10">
       <div class="h-panel">
         <div class="h-panel-bar grey-bg">
@@ -94,8 +94,12 @@ export default {
 </script>
 
 <style scoped>
+#signup {
+  margin-top: 3rem !important;
+}
 .grey-bg {
   background-color: rgba(0, 0, 0, 0.03);
+  text-align: center;
 }
 .h-form {
   padding-bottom: 0;
