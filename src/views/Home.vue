@@ -30,7 +30,9 @@
         </HHeader>
         <Content style="padding: 0px 30px">
           <Breadcrumb :datas="datas" style="margin: 15px 0px"></Breadcrumb>
+
           <router-view :key="$route.path"></router-view>
+
           <HFooter class="text-center">
             Copyright © {{ year }}
             <a href="http://www.ch-un.com" target="_blank">Lan</a>
