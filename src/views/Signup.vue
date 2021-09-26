@@ -14,6 +14,9 @@
                 v-model="school.name"
                 placeholder="Tên trường"
               />
+              <div class="message">
+                {{ validation.firstError("school.name") }}
+              </div>
             </FormItem>
             <FormItem :showLabel="false">
               <input
@@ -22,6 +25,9 @@
                 v-model="school.email"
                 placeholder="Email"
               />
+              <div class="message">
+                {{ validation.firstError("school.email") }}
+              </div>
             </FormItem>
             <FormItem :showLabel="false">
               <input
@@ -30,6 +36,9 @@
                 v-model="school.phone"
                 placeholder="Số điện thoại"
               />
+              <div class="message">
+                {{ validation.firstError("school.phone") }}
+              </div>
             </FormItem>
             <FormItem :showLabel="false">
               <div class="h-input-group">
@@ -40,6 +49,9 @@
                     v-model="school.password"
                     placeholder="Mật khẩu"
                   />
+                  <div class="message">
+                    {{ validation.firstError("school.password") }}
+                  </div>
                 </FormItem>
                 <Button
                   @click="isShow0 = !isShow0"
@@ -58,6 +70,9 @@
                     v-model="school.repassword"
                     placeholder="Nhập lại mật khẩu"
                   />
+                  <div class="message">
+                    {{ validation.firstError("school.repassword") }}
+                  </div>
                 </FormItem>
                 <Button
                   @click="isShow1 = !isShow1"
@@ -78,16 +93,47 @@
 </template>
 
 <script>
+import Vue from "vue";
+import SimpleVueValidation from "simple-vue-validator";
+const Validator = SimpleVueValidation.Validator;
+
+Vue.use(SimpleVueValidation);
 export default {
   name: "Signin",
   data: () => ({
-    school: { name: "", email: "", number: "", password: "", repassword: "" },
+    school: { name: "", email: "", phone: "", password: "", repassword: "" },
     isShow1: false,
     isShow0: false,
   }),
+  validators: {
+    "school.name": function (value) {
+      return Validator.value(value)
+        .required()
+        .regex("^[A-Za-z]*$", "Must only contain alphabetic characters.");
+    },
+    "school.email": function (value) {
+      return Validator.value(value).required().email();
+    },
+    "school.phone": function (value) {
+      return Validator.value(value).required().digit().length(10);
+    },
+    "school.password": function (value) {
+      return Validator.value(value).required().minLength(6);
+    },
+    "school.repassword, school.password": function (repassword, password) {
+      if (this.submitted || this.validation.isTouched("school.repassword")) {
+        return Validator.value(repassword).required().match(password);
+      }
+    },
+  },
   methods: {
-    submit() {
-      alert("Submited");
+    submit: function () {
+      this.submitted = true;
+      this.$validate().then(function (success) {
+        if (success) {
+          alert("Validation succeeded!");
+        }
+      });
     },
   },
 };
@@ -112,5 +158,8 @@ export default {
 }
 .h-input-addon {
   width: 30px;
+}
+.message {
+  color: red;
 }
 </style>

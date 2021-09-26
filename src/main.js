@@ -10,6 +10,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import Vuelidate from "vuelidate";
 import router from "./router";
 import store from "./store";
 
@@ -18,6 +19,7 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.use(HeyUI, { locale: en });
 Vue.config.productionTip = false;
+Vue.use(Vuelidate);
 
 new Vue({
   router,

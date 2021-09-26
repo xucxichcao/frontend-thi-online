@@ -20,6 +20,9 @@
                     type="text"
                     v-model="user.email"
                   />
+                  <div class="message">
+                    {{ validation.firstError("user.email") }}
+                  </div>
                 </FormItem>
                 <FormItem :showLabel="false">
                   <input
@@ -27,9 +30,14 @@
                     type="password"
                     v-model="user.password"
                   />
+                  <div class="message">
+                    {{ validation.firstError("user.password") }}
+                  </div>
                 </FormItem>
                 <FormItem :showLabel="false">
-                  <Button block color="primary">Đăng nhập</Button>
+                  <Button block color="primary" @click="submit"
+                    >Đăng nhập</Button
+                  >
                 </FormItem>
               </Form>
             </Cell>
@@ -54,11 +62,33 @@
 </template>
 
 <script>
+import Vue from "vue";
+import SimpleVueValidation from "simple-vue-validator";
+const Validator = SimpleVueValidation.Validator;
+
+Vue.use(SimpleVueValidation);
 export default {
   name: "Signin",
   data: () => ({
     user: { email: "", password: "" },
   }),
+  validators: {
+    "user.email": function (value) {
+      return Validator.value(value).required().email();
+    },
+    "user.password": function (value) {
+      return Validator.value(value).required();
+    },
+  },
+  methods: {
+    submit() {
+      this.$validate().then(function (success) {
+        if (success) {
+          alert("Validation succeeded!");
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -75,5 +105,8 @@ export default {
 }
 #signin {
   margin-top: 3rem !important;
+}
+.message {
+  color: red;
 }
 </style>
