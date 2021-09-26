@@ -99,6 +99,7 @@ const Validator = SimpleVueValidation.Validator;
 
 SimpleVueValidation.extendTemplates({
   required: "Không được để trống",
+  match: "Mật khẩu nhập lại không giống.",
 });
 
 Vue.use(SimpleVueValidation);

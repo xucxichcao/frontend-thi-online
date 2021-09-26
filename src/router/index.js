@@ -34,10 +34,28 @@ const routes = [
           },
           {
             path: "/test/:testId",
-            name: "Test detail",
+            name: "Test detail core",
             props: true,
             meta: { requireAuth: true, name: "Chi tiết bài thi" },
             component: () => import("../components/test/testDetail.vue"),
+            children: [
+              {
+                path: "/test/:testId",
+                name: "Test detail",
+                props: true,
+                meta: { requireAuth: true, name: "Chi tiết bài thi" },
+                component: () =>
+                  import("../components/test/testDetail/index.vue"),
+              },
+              {
+                path: "/test/:testId/attempt",
+                name: "Test",
+                props: true,
+                meta: { requireAuth: true, name: "Làm bài thi" },
+                component: () =>
+                  import("../components/test/testDetail/test.vue"),
+              },
+            ],
           },
         ],
       },
