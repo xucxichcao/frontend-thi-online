@@ -14,6 +14,9 @@
                 v-model="school.name"
                 placeholder="Tên trường"
               />
+              <div class="message">
+                {{ validation.firstError("school.name") }}
+              </div>
             </FormItem>
             <FormItem :showLabel="false">
               <input
@@ -22,6 +25,9 @@
                 v-model="school.email"
                 placeholder="Email"
               />
+              <div class="message">
+                {{ validation.firstError("school.email") }}
+              </div>
             </FormItem>
             <FormItem :showLabel="false">
               <input
@@ -30,6 +36,9 @@
                 v-model="school.phone"
                 placeholder="Số điện thoại"
               />
+              <div class="message">
+                {{ validation.firstError("school.phone") }}
+              </div>
             </FormItem>
             <FormItem :showLabel="false">
               <div class="h-input-group">
@@ -40,6 +49,9 @@
                     v-model="school.password"
                     placeholder="Mật khẩu"
                   />
+                  <div class="message">
+                    {{ validation.firstError("school.password") }}
+                  </div>
                 </FormItem>
                 <Button
                   @click="isShow0 = !isShow0"
@@ -58,6 +70,9 @@
                     v-model="school.repassword"
                     placeholder="Nhập lại mật khẩu"
                   />
+                  <div class="message">
+                    {{ validation.firstError("school.repassword") }}
+                  </div>
                 </FormItem>
                 <Button
                   @click="isShow1 = !isShow1"
@@ -78,16 +93,56 @@
 </template>
 
 <script>
+import Vue from "vue";
+import SimpleVueValidation from "simple-vue-validator";
+const Validator = SimpleVueValidation.Validator;
+
+SimpleVueValidation.extendTemplates({
+  required: "Không được để trống",
+});
+
+Vue.use(SimpleVueValidation);
 export default {
   name: "Signin",
   data: () => ({
-    school: { name: "", email: "", number: "", password: "", repassword: "" },
+    school: { name: "", email: "", phone: "", password: "", repassword: "" },
     isShow1: false,
     isShow0: false,
   }),
+  validators: {
+    "school.name"(value) {
+      return Validator.value(value).required();
+    },
+    "school.email"(value) {
+      return Validator.value(value).required().email();
+    },
+    "school.phone"(value) {
+      return Validator.value(value)
+        .required()
+        .regex(
+          `([+84|84|0]+(3|5|7|8|9))+([0-9]{8})`,
+          "Vui lòng nhập đúng định dạng số điện thoại"
+        );
+    },
+    "school.password"(value) {
+      return Validator.value(value).required().minLength(6);
+    },
+    "school.repassword, school.password"(repassword, password) {
+      if (this.submitted || this.validation.isTouched("school.repassword")) {
+        return Validator.value(repassword).required().match(password);
+      }
+    },
+  },
   methods: {
     submit() {
-      alert("Submited");
+      this.submitted = true;
+      this.$validate().then(function (success) {
+        if (success) {
+          alert("Validation succeeded!");
+        } else {
+          alert("Validation failed!");
+        }
+      });
     },
   },
 };
@@ -112,5 +167,8 @@ export default {
 }
 .h-input-addon {
   width: 30px;
+}
+.message {
+  color: red;
 }
 </style>
