@@ -1,5 +1,6 @@
-module.exports = {
-  prefix: "h-",
+const vars = require("heyui/themes/var.js");
+
+Object.assign(vars, {
   "primary-color": "#0078D7",
   "primary1-color": "rgba(0, 120, 215, 0.45)",
   "primary2-color": "rgba(0, 120, 215, 0.15)",
@@ -82,4 +83,6 @@ module.exports = {
   "menu-white-background-color": "rgba(0, 120, 215, 0.15)",
   "skeleton-bg": "#f5f5f5",
   "skeleton-height": "16px",
-};
+});
+
+module.exports = vars;
