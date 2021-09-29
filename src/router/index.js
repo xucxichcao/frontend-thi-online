@@ -59,6 +59,22 @@ const routes = [
           },
         ],
       },
+      {
+        path: "/setting",
+        name: "Setting core",
+        props: true,
+        meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
+        component: () => import("../components/settings/core.vue"),
+        children: [
+          {
+            path: "/setting",
+            name: "Setting default",
+            props: true,
+            meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
+            component: () => import("../components/settings/personal.vue"),
+          },
+        ],
+      },
     ],
   },
   {
