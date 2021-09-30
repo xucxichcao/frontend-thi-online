@@ -61,6 +61,7 @@ export default {
         {
           key: "change-password",
           title: "Đổi mật khẩu",
+          name: "Setting password",
         },
       ],
     };
