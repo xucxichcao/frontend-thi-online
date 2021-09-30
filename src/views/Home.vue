@@ -90,6 +90,14 @@ export default {
       return breadCrumbArray;
     },
   },
+  watch: {
+    $route() {
+      if (this.$route.name) {
+        //The name of the router corresponds to the key of the menu
+        this.$refs.menu.select(this.$route.name);
+      }
+    },
+  },
   methods: {
     trigger(data) {
       if (data.children.length > 0) return;
