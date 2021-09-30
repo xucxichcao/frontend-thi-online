@@ -73,6 +73,14 @@ const routes = [
             meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
             component: () => import("../components/settings/personal.vue"),
           },
+          {
+            path: "/setting-password",
+            name: "Setting password",
+            props: true,
+            meta: { requireAuth: true, name: "Thay đổi mật khẩu" },
+            component: () =>
+              import("../components/settings/settingPassword.vue"),
+          },
         ],
       },
     ],
