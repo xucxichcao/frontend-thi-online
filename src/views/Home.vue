@@ -93,8 +93,7 @@ export default {
   watch: {
     $route() {
       if (this.$route.name) {
-        //The name of the router corresponds to the key of the menu
-        this.$refs.menu.select(this.$route.name);
+        this.$refs.menu.select(this.$route.meta.sideBar);
       }
     },
   },
@@ -105,8 +104,8 @@ export default {
     },
   },
   mounted() {
-    if (this.$route.name) {
-      this.$refs.menu.select(this.$route.name);
+    if (this.$route.matched) {
+      this.$refs.menu.select(this.$route.meta.sideBar);
     }
   },
 };

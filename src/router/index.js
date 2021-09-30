@@ -14,7 +14,7 @@ const routes = [
         path: "",
         name: "Home core",
         props: true,
-        meta: { requireAuth: true, name: "Trang chủ" },
+        meta: { requireAuth: true, name: "Trang chủ", sideBar: "Home core" },
         component: () => import("../components/home/core.vue"),
       },
       {
@@ -27,20 +27,28 @@ const routes = [
             path: "",
             name: "Test list",
             props: true,
-            meta: { requireAuth: true, name: "Bài thi" },
+            meta: { requireAuth: true, name: "Bài thi", sideBar: "Test list" },
             component: () => import("../components/test/testList.vue"),
           },
           {
             path: "/test/:testId",
             props: true,
-            meta: { requireAuth: true, name: "Chi tiết bài thi" },
+            meta: {
+              requireAuth: true,
+              name: "Chi tiết bài thi",
+              sideBar: "Test list",
+            },
             component: () => import("../components/test/testDetail.vue"),
             children: [
               {
                 path: "/test/:testId",
                 name: "Test detail",
                 props: true,
-                meta: { requireAuth: true, name: "Chi tiết bài thi" },
+                meta: {
+                  requireAuth: true,
+                  name: "Chi tiết bài thi",
+                  sideBar: "Test list",
+                },
                 component: () =>
                   import("../components/test/testDetail/index.vue"),
               },
@@ -66,14 +74,22 @@ const routes = [
             path: "/setting",
             name: "Setting default",
             props: true,
-            meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
+            meta: {
+              requireAuth: true,
+              name: "Tùy chỉnh tài khoản",
+              sideBar: "Setting default",
+            },
             component: () => import("../components/settings/personal.vue"),
           },
           {
             path: "/setting/change-password",
             name: "Setting password",
             props: true,
-            meta: { requireAuth: true, name: "Thay đổi mật khẩu" },
+            meta: {
+              requireAuth: true,
+              name: "Thay đổi mật khẩu",
+              sideBar: "Setting default",
+            },
             component: () =>
               import("../components/settings/settingPassword.vue"),
           },
