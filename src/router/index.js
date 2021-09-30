@@ -6,7 +6,6 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
     props: true,
     meta: { requireAuth: true, name: "Trang chủ" },
     component: () => import("../views/Home.vue"),
@@ -20,7 +19,6 @@ const routes = [
       },
       {
         path: "/test",
-        name: "Test core",
         props: true,
         meta: { requireAuth: true, name: "Bài thi" },
         component: () => import("../components/test/core.vue"),
@@ -34,7 +32,6 @@ const routes = [
           },
           {
             path: "/test/:testId",
-            name: "Test detail core",
             props: true,
             meta: { requireAuth: true, name: "Chi tiết bài thi" },
             component: () => import("../components/test/testDetail.vue"),
@@ -61,7 +58,6 @@ const routes = [
       },
       {
         path: "/setting",
-        name: "Setting core",
         props: true,
         meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
         component: () => import("../components/settings/core.vue"),
@@ -74,7 +70,7 @@ const routes = [
             component: () => import("../components/settings/personal.vue"),
           },
           {
-            path: "/setting-password",
+            path: "/setting/change-password",
             name: "Setting password",
             props: true,
             meta: { requireAuth: true, name: "Thay đổi mật khẩu" },

@@ -4,10 +4,12 @@
       <Sider theme="dark">
         <div class="layout-logo"></div>
         <Menu
+          ref="menu"
           style="margin-top: 20px"
           className="h-menu-dark"
           :datas="menuDatas"
           :inlineCollapsed="siderCollapsed"
+          @click="trigger"
         ></Menu>
       </Sider>
       <Layout :headerFixed="true">
@@ -28,19 +30,21 @@
             /></Button>
           </div>
         </HHeader>
-        <Content style="padding: 0px 30px">
+        <Content
+          style="padding: 0px 30px; display: flex; flex-direction: column"
+        >
           <Breadcrumb
             :datas="breadCrumbs"
             style="margin: 15px 0px"
           ></Breadcrumb>
-
           <router-view :key="$route.path"></router-view>
-
-          <HFooter class="text-center">
-            Copyright © {{ year }}
-            <a href="http://www.ch-un.com" target="_blank">Lan</a>
-          </HFooter>
         </Content>
+        <HFooter class="footer-height">
+          <span class="footer-text">
+            Copyright © {{ year }}
+            <a href="http://www.ch-un.com" target="_blank">Lan</a></span
+          >
+        </HFooter>
       </Layout>
     </Layout>
   </div>
@@ -54,16 +58,16 @@ export default {
       year: new Date().getFullYear(),
       siderCollapsed: true,
       menuDatas: [
-        { title: "Home", key: "welcome", icon: "h-icon-home" },
-        { title: "Inquire", key: "search", icon: "h-icon-search" },
         {
-          title: "Collection",
-          key: "favor",
-          icon: "h-icon-star",
-          count: 100,
-          children: [{ title: "Collection-1", key: "favor2-1" }],
+          title: "Trang chủ",
+          key: "Home core",
+          icon: "h-icon-home",
         },
-        { title: "task", icon: "h-icon-task", key: "task" },
+        {
+          title: "Tài khoản",
+          key: "Setting default",
+          icon: "h-icon-user",
+        },
       ],
     };
   },
@@ -86,11 +90,40 @@ export default {
       return breadCrumbArray;
     },
   },
+  methods: {
+    trigger(data) {
+      if (data.children.length > 0) return;
+      this.$router.push({ name: data.key });
+    },
+  },
+  mounted() {
+    if (this.$route.name) {
+      this.$refs.menu.select(this.$route.name);
+    }
+  },
 };
 </script>
 
 <style scoped>
 .navbar button:last-of-type {
   margin-left: auto;
+}
+.footer-height {
+  min-height: 10vh;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.footer-text {
+  margin: auto;
+}
+.h-layout.h-layout-header-fixed {
+  padding-top: 7vh;
+}
+.h-layout-header {
+  height: 7vh;
+}
+.h-layout.h-layout-header-fixed > .h-layout-content {
+  min-height: 83vh;
 }
 </style>

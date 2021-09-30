@@ -18,18 +18,20 @@
                     v-for="buttonData in menuData"
                     :key="buttonData.key"
                   >
-                    <Button
-                      :color="
-                        $route.name === buttonData.name ? 'primary' : null
-                      "
-                      size="l"
-                      :block="true"
-                    >
-                      <div class="menu-button-block">
-                        <h3>{{ buttonData.title }}</h3>
-                        <!-- <span>{{ buttonData.subtext }}</span> -->
-                      </div>
-                    </Button>
+                    <router-link :to="{ name: buttonData.name }">
+                      <Button
+                        :color="
+                          $route.name === buttonData.name ? 'primary' : null
+                        "
+                        size="l"
+                        :block="true"
+                      >
+                        <div class="menu-button-block">
+                          <h3>{{ buttonData.title }}</h3>
+                          <!-- <span>{{ buttonData.subtext }}</span> -->
+                        </div>
+                      </Button>
+                    </router-link>
                   </Cell>
                 </Row>
               </div>
