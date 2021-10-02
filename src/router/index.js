@@ -98,23 +98,29 @@ const routes = [
       {
         path: "/exam",
         props: true,
-        meta: { requireAuth: true, name: "Tạo đề thi" },
+        meta: { requireAuth: true, name: "Danh sách bài thi" },
         component: () => import("../components/exam/core.vue"),
         children: [
           {
             path: "/exam",
             name: "Exam default",
             props: true,
-            meta: { requireAuth: true, name: "Tạo đề thi" },
-            component: () => import("../components/exam/createExam.vue"),
+            meta: {
+              requireAuth: true,
+              name: "Danh sách bài thi",
+              sidebar: "Exam default",
+            },
           },
           {
-            path: "/setting/change-password",
-            name: "Setting password",
+            path: "/exam/create",
+            name: "Create exam",
             props: true,
-            meta: { requireAuth: true, name: "Thay đổi mật khẩu" },
-            component: () =>
-              import("../components/settings/settingPassword.vue"),
+            meta: {
+              requireAuth: true,
+              name: "Tạo đề thi",
+              sidebar: "Exam default",
+            },
+            component: () => import("../components/exam/createExam.vue"),
           },
         ],
       },
