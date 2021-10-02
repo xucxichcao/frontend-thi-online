@@ -95,6 +95,29 @@ const routes = [
           },
         ],
       },
+      {
+        path: "/exam",
+        props: true,
+        meta: { requireAuth: true, name: "Tạo đề thi" },
+        component: () => import("../components/exam/core.vue"),
+        children: [
+          {
+            path: "/exam",
+            name: "Exam default",
+            props: true,
+            meta: { requireAuth: true, name: "Tạo đề thi" },
+            component: () => import("../components/exam/createExam.vue"),
+          },
+          {
+            path: "/setting/change-password",
+            name: "Setting password",
+            props: true,
+            meta: { requireAuth: true, name: "Thay đổi mật khẩu" },
+            component: () =>
+              import("../components/settings/settingPassword.vue"),
+          },
+        ],
+      },
     ],
   },
   {
