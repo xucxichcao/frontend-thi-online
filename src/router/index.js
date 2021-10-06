@@ -124,6 +124,35 @@ const routes = [
           },
         ],
       },
+      {
+        path: "/school",
+        props: true,
+        meta: { requireAuth: true, name: "Nhà trường" },
+        component: () => import("../components/school/core.vue"),
+        children: [
+          {
+            path: "/school",
+            name: "School default",
+            props: true,
+            meta: {
+              requireAuth: true,
+              name: "Nhà trường",
+              sidebar: "School default",
+            },
+          },
+          {
+            path: "/school/add",
+            name: "Add student",
+            props: true,
+            meta: {
+              requireAuth: true,
+              name: "Thêm sinh viên",
+              sidebar: "School default",
+            },
+            component: () => import("../components/school/addStudent.vue"),
+          },
+        ],
+      },
     ],
   },
   {
