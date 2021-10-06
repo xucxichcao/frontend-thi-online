@@ -110,6 +110,7 @@ const routes = [
               name: "Danh sách bài thi",
               sidebar: "Exam default",
             },
+            component: () => import("../components/exam/listExam.vue"),
           },
           {
             path: "/exam/create",
