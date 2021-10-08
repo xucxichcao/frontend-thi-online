@@ -65,6 +65,21 @@ const routes = [
         ],
       },
       {
+        path: "/camera",
+        props: true,
+        meta: { requireAuth: true, name: "Camera" },
+        component: () => import("../components/camera/core.vue"),
+        children: [
+          {
+            path: "/camera",
+            name: "Camera default",
+            props: true,
+            meta: { requireAuth: true, name: "Camera" },
+            component: () => import("../components/camera/camera.vue"),
+          },
+        ],
+      },
+      {
         path: "/setting",
         props: true,
         meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
