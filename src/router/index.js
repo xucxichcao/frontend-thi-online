@@ -56,34 +56,51 @@ const routes = [
                 path: "/test/:testId/attempt",
                 name: "Test",
                 props: true,
-                meta: { requireAuth: true, name: "Làm bài thi" },
+                meta: {
+                  requireAuth: true,
+                  name: "Làm bài thi",
+                  sideBar: "Test list",
+                },
                 component: () =>
                   import("../components/test/testDetail/test.vue"),
               },
               {
-                path: "/test/:testId/attempt/finish",
+                path: "/test/:testId/finish",
                 name: "Finish test",
                 props: true,
-                meta: { requireAuth: true, name: "Hoàn thành bài thi" },
+                meta: {
+                  requireAuth: true,
+                  name: "Hoàn thành bài thi",
+                  sideBar: "Test list",
+                },
                 component: () =>
                   import("../components/test/testDetail/finish.vue"),
               },
+              {
+                path: "/test/:testId/monitor",
+                props: true,
+                meta: {
+                  requireAuth: true,
+                  name: "Monitor test",
+                  requireTeacher: true,
+                  sideBar: "Test list",
+                },
+                component: () => import("../components/camera/core.vue"),
+                children: [
+                  {
+                    path: "/test/:testId/monitor",
+                    name: "Monitor test default",
+                    props: true,
+                    meta: {
+                      requireAuth: true,
+                      name: "Monitor test",
+                      sideBar: "Test list",
+                    },
+                    component: () => import("../components/camera/camera.vue"),
+                  },
+                ],
+              },
             ],
-          },
-        ],
-      },
-      {
-        path: "/camera",
-        props: true,
-        meta: { requireAuth: true, name: "Camera" },
-        component: () => import("../components/camera/core.vue"),
-        children: [
-          {
-            path: "/camera",
-            name: "Camera default",
-            props: true,
-            meta: { requireAuth: true, name: "Camera" },
-            component: () => import("../components/camera/camera.vue"),
           },
         ],
       },
