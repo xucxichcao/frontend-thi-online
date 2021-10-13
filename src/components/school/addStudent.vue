@@ -10,11 +10,11 @@
         <div>
           <div class="upload">
             <h3>Upload file csv theo mẫu dưới</h3>
-            <div style="margin-left: 10px">
+            <div style="margin-left: 1em">
               <Button color="primary">Upload</Button>
             </div>
           </div>
-          <div style="margin-top: 20px">
+          <div style="margin-top: 2em">
             <div>
               <Table :datas="datas" stripe>
                 <TableItem title="MSSV" prop="mssv"></TableItem>
@@ -81,7 +81,7 @@ export default {
 
 <style>
 .button-add {
-  margin-top: 20px;
+  margin-top: 1em;
   display: flex;
   align-items: center;
   justify-content: flex-end;

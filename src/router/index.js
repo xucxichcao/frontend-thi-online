@@ -60,7 +60,30 @@ const routes = [
                 component: () =>
                   import("../components/test/testDetail/test.vue"),
               },
+              {
+                path: "/test/:testId/attempt/finish",
+                name: "Finish test",
+                props: true,
+                meta: { requireAuth: true, name: "Hoàn thành bài thi" },
+                component: () =>
+                  import("../components/test/testDetail/finish.vue"),
+              },
             ],
+          },
+        ],
+      },
+      {
+        path: "/camera",
+        props: true,
+        meta: { requireAuth: true, name: "Camera" },
+        component: () => import("../components/camera/core.vue"),
+        children: [
+          {
+            path: "/camera",
+            name: "Camera default",
+            props: true,
+            meta: { requireAuth: true, name: "Camera" },
+            component: () => import("../components/camera/camera.vue"),
           },
         ],
       },
@@ -110,6 +133,7 @@ const routes = [
               name: "Danh sách bài thi",
               sidebar: "Exam default",
             },
+            component: () => import("../components/exam/listExam.vue"),
           },
           {
             path: "/exam/create",
