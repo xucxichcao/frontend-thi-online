@@ -60,6 +60,14 @@ const routes = [
                 component: () =>
                   import("../components/test/testDetail/test.vue"),
               },
+              {
+                path: "/test/:testId/attempt/finish",
+                name: "Finish test",
+                props: true,
+                meta: { requireAuth: true, name: "Hoàn thành bài thi" },
+                component: () =>
+                  import("../components/test/testDetail/finish.vue"),
+              },
             ],
           },
         ],
