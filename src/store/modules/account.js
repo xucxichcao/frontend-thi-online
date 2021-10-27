@@ -2,6 +2,7 @@ const state = {
   user: {},
   isAuthenticated: false,
   token: "",
+  message: "",
 };
 const getters = {
   getAuthen(state) {
@@ -9,6 +10,9 @@ const getters = {
   },
   getUsername(state) {
     return state.user.username;
+  },
+  getMessage(state) {
+    return state.message;
   },
 };
 const actions = {
@@ -23,6 +27,9 @@ const actions = {
   },
   unsetUser(context) {
     context.commit("UNSET_CURRENT_USER");
+  },
+  setMessages(context, payload) {
+    context.commit("SET_MESSAGE", payload);
   },
 };
 const mutations = {
@@ -39,6 +46,9 @@ const mutations = {
     state.user = {};
     state.isAuthenticated = false;
     state.token = "";
+  },
+  SET_MESSAGE(state, value) {
+    state.message = value;
   },
 };
 

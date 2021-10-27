@@ -28,3 +28,30 @@ body {
   font-size: 14px;
 }
 </style>
+<script>
+import { setAxiosAuthToken } from "./helpers/auth-header";
+export default {
+  methods: {
+    isEmpty(value) {
+      return (
+        value === undefined ||
+        value === null ||
+        (typeof value === "object" && Object.keys(value).length === 0) ||
+        (typeof value === "string" && value.trim().length === 0)
+      );
+    },
+  },
+  created: function () {
+    if (!this.isEmpty(localStorage.getItem("token"))) {
+      this.$store.dispatch("user/setToken", localStorage.getItem("token"));
+      this.$store.dispatch("user/setIsAuthenticated", true);
+      setAxiosAuthToken(localStorage.getItem("token"));
+    }
+    if (!this.isEmpty(localStorage.getItem("user")))
+      this.$store.dispatch(
+        "user/setUser",
+        JSON.parse(localStorage.getItem("user"))
+      );
+  },
+};
+</script>

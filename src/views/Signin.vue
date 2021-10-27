@@ -15,11 +15,7 @@
                 :showErrorTip="true"
               >
                 <FormItem :showLabel="false">
-                  <input
-                    placeholder="Tên đăng nhập"
-                    type="text"
-                    v-model="user.email"
-                  />
+                  <input placeholder="Email" type="text" v-model="user.email" />
                 </FormItem>
                 <FormItem :showLabel="false">
                   <input
@@ -29,7 +25,9 @@
                   />
                 </FormItem>
                 <FormItem :showLabel="false">
-                  <Button block color="primary">Đăng nhập</Button>
+                  <Button block color="primary" @click="signIn()"
+                    >Đăng nhập</Button
+                  >
                 </FormItem>
               </Form>
             </Cell>
@@ -47,6 +45,7 @@
               </Row>
             </Cell>
           </Row>
+          <Loading :loading="loading"></Loading>
         </div>
       </div>
     </Cell>
@@ -54,11 +53,23 @@
 </template>
 
 <script>
+import { userService } from "../services/account";
+
 export default {
   name: "Signin",
   data: () => ({
     user: { email: "", password: "" },
+    loading: false,
   }),
+  methods: {
+    signIn() {
+      this.loading = true;
+      userService.login(this.user.email, this.user.password).then(() => {
+        this.loading = false;
+        this.$router.push({ name: "Home core" });
+      });
+    },
+  },
 };
 </script>
 
