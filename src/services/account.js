@@ -50,7 +50,6 @@ function getCurrentUser() {
 }
 
 function setCurrentUser(user) {
-  localStorage.setItem("user", JSON.stringify(user));
   store.dispatch("account/setUser", user);
 }
 
