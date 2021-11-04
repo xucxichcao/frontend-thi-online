@@ -9,9 +9,9 @@
       <div class="h-panel-body">
         <div>
           <div class="upload">
-            <h3>Upload file csv theo mẫu dưới</h3>
+            <h3>Upload file csv theo mẫu dưới (không thêm header)</h3>
             <div style="margin-left: 1em">
-              <Button color="primary">Upload</Button>
+              <input type="file" accept=".csv" />
             </div>
           </div>
           <div style="margin-top: 2em">
