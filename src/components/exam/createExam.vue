@@ -122,7 +122,7 @@
               </FormItem>
               <FormItem :showLabel="false">
                 <center>
-                  <Button @click="next" size="l" color="primary">Next</Button>
+                  <Button @click="next" size="l" color="primary">Tạo</Button>
                 </center>
               </FormItem>
             </Form>
