@@ -11,9 +11,9 @@
               <FormItem :showLabel="false">
                 <div class="formField">
                   <span class="fieldLabel">Tên bài thi</span>
-                  <input type="text" v-model="data.ten" />
+                  <input type="text" v-model="phongThi.ten" />
                   <div class="message">
-                    {{ validation.firstError("data.ten") }}
+                    {{ validation.firstError("phongThi.ten") }}
                   </div>
                 </div>
               </FormItem>
@@ -21,12 +21,18 @@
                 <div class="formField">
                   <span class="fieldLabel">Thời gian làm bài</span>
                   <div class="h-input-group">
-                    <input type="text" v-model="data.time" />
+                    <input type="text" v-model="phongThi.thoiGianLamBai" />
                     <span class="h-input-addon">phút</span>
                   </div>
                   <div class="message">
-                    {{ validation.firstError("data.time") }}
+                    {{ validation.firstError("phongThi.thoiGianLamBai") }}
                   </div>
+                </div>
+              </FormItem>
+              <FormItem :showLabel="false">
+                <div class="formField">
+                  <span class="fieldLabel">File .csv đề bài</span>
+                  <input type="file" accept=".csv" />
                 </div>
               </FormItem>
             </Form>
@@ -40,18 +46,18 @@
               <FormItem :showLabel="false">
                 <div class="formField">
                   <span class="fieldLabel">Học kì</span>
-                  <Select v-model="data.hocKi" :datas="hocKi"></Select>
+                  <Select v-model="phongThi.hocKi" :datas="hocKi"></Select>
                   <div class="message">
-                    {{ validation.firstError("data.hocKi") }}
+                    {{ validation.firstError("phongThi.hocKi") }}
                   </div>
                 </div>
               </FormItem>
               <FormItem :showLabel="false">
                 <div class="formField">
                   <span class="fieldLabel">Năm học</span>
-                  <input type="text" v-model="data.namHoc" />
+                  <input type="text" v-model="phongThi.namHoc" />
                   <div class="message">
-                    {{ validation.firstError("data.namHoc") }}
+                    {{ validation.firstError("phongThi.namHoc") }}
                   </div>
                 </div>
               </FormItem>
@@ -59,30 +65,30 @@
                 <div class="formField">
                   <span class="fieldLabel">Ngày thi</span>
                   <DatePicker
-                    v-model="data.ngayThi"
+                    v-model="phongThi.thoiGianThi"
                     :type="type"
                     :option="dateTimePickerOption"
                   ></DatePicker>
                   <div class="message">
-                    {{ validation.firstError("data.ngayThi") }}
+                    {{ validation.firstError("phongThi.thoiGianThi") }}
                   </div>
                 </div>
               </FormItem>
               <FormItem :showLabel="false">
                 <div class="formField">
-                  <span class="fieldLabel">Hình thức thi</span>
-                  <Select v-model="data.hinhThuc" :datas="hinhThuc"></Select>
+                  <span class="fieldLabel">Sỉ số</span>
+                  <input type="text" v-model="phongThi.siSo" />
                   <div class="message">
-                    {{ validation.firstError("data.hinhThuc") }}
+                    {{ validation.firstError("phongThi.siSo") }}
                   </div>
                 </div>
               </FormItem>
               <FormItem :showLabel="false">
                 <div class="formField">
                   <span class="fieldLabel">Số câu hỏi</span>
-                  <input type="text" v-model="data.soLuong" />
+                  <input type="text" v-model="deThi.soLuongCauHoi" />
                   <div class="message">
-                    {{ validation.firstError("data.soLuong") }}
+                    {{ validation.firstError("deThi.soLuongCauHoi") }}
                   </div>
                 </div>
               </FormItem>
@@ -113,14 +119,18 @@ Vue.use(SimpleVueValidation);
 export default {
   data: function () {
     return {
-      data: {
-        ten: undefined,
+      phongThi: {
+        tenPhongThi: undefined,
         hocKi: undefined,
         namHoc: undefined,
-        ngayThi: undefined,
-        hinhThuc: undefined,
-        soLuong: undefined,
-        time: undefined,
+        thoiGianLamBai: undefined,
+        thoiGianThi: undefined,
+        siSo: undefined,
+        danhSach: undefined,
+      },
+      deThi: {
+        soLuongCauHoi: undefined,
+        file: undefined,
       },
       select: null,
       type: "datetime",
@@ -163,28 +173,34 @@ export default {
     },
   },
   validators: {
-    "data.ten"(value) {
+    "phongThi.tenPhongThi"(value) {
       return Validator.value(value).required();
     },
-    "data.time"(value) {
+    "phongThi.thoiGianLamBai"(value) {
       return Validator.value(value).required().regex("([0-9])");
     },
-    "data.hocKi"(value) {
+    "phongThi.hocKi"(value) {
       return Validator.value(value).required();
     },
-    "data.namHoc"(value) {
+    "phongThi.namHoc"(value) {
       return Validator.value(value)
         .required()
         .regex(`(20[0-9]{2})-(20[0-9]{2})`);
     },
-    "data.ngayThi"(value) {
+    "phongThi.thoiGianThi"(value) {
       return Validator.value(value).required();
     },
-    "data.hinhThuc"(value) {
-      return Validator.value(value).required();
-    },
-    "data.soLuong"(value) {
+    "phongThi.siSo"(value) {
       return Validator.value(value).required().integer("Không được nhập chữ");
+    },
+    "phongThi.danhSach"(value) {
+      return Validator.value(value).required();
+    },
+    "deThi.soLuongCauHoi"(value) {
+      return Validator.value(value).required().integer("Không được nhập chữ");
+    },
+    "deThi.file"(value) {
+      return Validator.value(value).required();
     },
   },
 };
