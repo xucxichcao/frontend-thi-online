@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import store from "../store/index";
+// import store from "../store/index";
 Vue.use(VueRouter);
 
 const routes = [
@@ -63,6 +63,18 @@ const routes = [
                 },
                 component: () =>
                   import("../components/test/testDetail/test.vue"),
+              },
+              {
+                path: "/test/:testId/all",
+                name: "Test",
+                props: true,
+                meta: {
+                  requireAuth: true,
+                  name: "Tất cả câu hỏi",
+                  sideBar: "All question test list",
+                },
+                component: () =>
+                  import("../components/test/testDetail/allQuestion.vue"),
               },
               {
                 path: "/test/:testId/finish",
@@ -223,18 +235,18 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requireAuth)) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    if (!store.getters["account/getAuthen"]) {
-      next({ name: "Signin" });
-    } else {
-      next(); // go to wherever I'm going
-    }
-  } else {
-    next(); // does not require auth, make sure to always call next()!
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requireAuth)) {
+//     // this route requires auth, check if logged in
+//     // if not, redirect to login page.
+//     if (!store.getters["account/getAuthen"]) {
+//       next({ name: "Signin" });
+//     } else {
+//       next(); // go to wherever I'm going
+//     }
+//   } else {
+//     next(); // does not require auth, make sure to always call next()!
+//   }
+// });
 
 export default router;

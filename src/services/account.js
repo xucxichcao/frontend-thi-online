@@ -27,7 +27,7 @@ function login(email, password) {
           "account/setMessage",
           error.response.data["non_field_error"]
         );
-        store.dispatch("user/setIsAuthenticated", false);
+        store.dispatch("account/setIsAuthenticated", false);
       } else if (error.message) {
         store.dispatch("account/setMessage", error.message);
       }
