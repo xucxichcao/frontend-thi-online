@@ -29,10 +29,38 @@
                   </div>
                 </div>
               </FormItem>
-              <FormItem :showLabel="false">
+              <FormItem :showLabel="false" class="h-form-item-editted-1">
                 <div class="formField">
                   <span class="fieldLabel">File .csv đề bài</span>
                   <input type="file" accept=".csv" />
+                </div>
+              </FormItem>
+              <FormItem :showLabel="false" class="h-form-item-editted-2">
+                <div class="formField">
+                  <span class="fieldLabel">File .csv danh sách</span>
+                  <input type="file" accept=".csv" />
+                </div>
+              </FormItem>
+              <FormItem :showLabel="false" class="h-form-item-editted-1">
+                <div class="formField">
+                  <span class="fieldLabel">Ví dụ (không cần header)</span>
+                  <Table :datas="deThiData" stripe>
+                    <TableItem title="Số đáp án" prop="soDapAn"></TableItem>
+                    <TableItem title="Đề" prop="de"></TableItem>
+                    <TableItem title="Đáp án 1" prop="dapan1"></TableItem>
+                    <TableItem title="Đáp án 2" prop="dapan2"></TableItem>
+                    <TableItem title="Đáp án ..." prop="dapan"></TableItem>
+                    <TableItem title="Đáp án n" prop="dapann"></TableItem>
+                    <TableItem title="Đáp án đúng" prop="dapandung"></TableItem>
+                  </Table>
+                </div>
+              </FormItem>
+              <FormItem :showLabel="false" class="h-form-item-editted-2">
+                <div class="formField">
+                  <span class="fieldLabel">Ví dụ (không cần header)</span>
+                  <Table :datas="danhSachData" stripe>
+                    <TableItem title="Email" prop="email"></TableItem>
+                  </Table>
                 </div>
               </FormItem>
             </Form>
@@ -132,6 +160,46 @@ export default {
         soLuongCauHoi: undefined,
         file: undefined,
       },
+      deThiData: [
+        {
+          soDapAn: "4",
+          de: "1+1 = ?",
+          dapan1: "2",
+          dapan2: "3",
+          dapann: "5",
+          dapan: "...",
+          dapandung: "1",
+        },
+        {
+          soDapAn: "5",
+          de: "1+2 = ?",
+          dapan1: "2",
+          dapan2: "3",
+          dapann: "6",
+          dapan: "...",
+          dapandung: "2",
+        },
+        {
+          soDapAn: "7",
+          de: "1+3 = ?",
+          dapan1: "4",
+          dapan2: "5",
+          dapann: "10",
+          dapan: "...",
+          dapandung: "1",
+        },
+      ],
+      danhSachData: [
+        {
+          email: "18521138@gm.uit.edu.vn",
+        },
+        {
+          email: "18521103@gm.uit.edu.vn",
+        },
+        {
+          email: "18520795@gm.uit.edu.vn",
+        },
+      ],
       select: null,
       type: "datetime",
       dateTimePickerOption: {
@@ -223,5 +291,11 @@ export default {
 }
 .message {
   color: red;
+}
+.h-form-item-editted-1 {
+  width: 75% !important;
+}
+.h-form-item-editted-2 {
+  width: 25% !important;
 }
 </style>
