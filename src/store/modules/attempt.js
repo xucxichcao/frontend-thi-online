@@ -1,28 +1,21 @@
 const state = {
-  attempt: {},
+  ctdt: {},
 };
 const getters = {
-  getAttempt(state) {
-    return state.attempt;
+  getCTDT(state) {
+    return state.ctdt;
   },
 };
 
 const actions = {
-  setAttempt(context, payload) {
-    context.commit("SET_ATTEMPT", payload);
+  setCTDT(context, payload) {
+    context.commit("SET_CTDT", payload);
   },
 };
 
 const mutations = {
-  SET_ATTEMPT(state, value) {
-    state.attempt = value;
-    // console.log(state.attempt.results);
-    let noidung = [];
-    for (let i = 0; i < state.attempt.results.length; i++) {
-      noidung = state.attempt.results[i]["noiDung"];
-      noidung = JSON.parse(noidung);
-    }
-    console.log(noidung);
+  SET_CTDT(state, value) {
+    state.ctdt = value;
   },
 };
 

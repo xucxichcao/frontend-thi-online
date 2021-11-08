@@ -49,29 +49,34 @@ export default {
       key: "",
     };
   },
-  mounted() {
+  async mounted() {
     this.loading = true;
-    http.get("/sv/phong-thi/" + this.id).then((response) => {
+    await http.get("/sv/phong-thi/" + this.id).then((response) => {
       this.phongThi = response.data;
-      this.loading = false;
     });
-    http.get(`/sv/get-de-thi/?idPhongThi=${this.id}`).then((response) => {
-      this.dethi = response.data.results[0];
-      this.loading = false;
-    });
-    http.get(`/sv/get-key/?idPhongThi=${this.id}`).then((response) => {
-      this.key = response.data.results[0].key;
-      this.loading = false;
-    });
+    await http
+      .get(`/sv/get-de-thi/`, { params: { idPhongThi: this.id } })
+      .then((response) => {
+        this.dethi = response.data.results[0];
+        this.loading = false;
+      });
   },
   methods: {
-    vaoThi() {
+    async vaoThi() {
       this.loading = true;
-      http.get(`/sv/ctdt/?key=${this.key}`).then((response) => {
-        store.dispatch("attempt/setAttempt", response.data);
-        this.loading = false;
-        this.$router.push(`/test/${this.id}/attempt`);
-      });
+      await http
+        .get(`/sv/get-key/`, { params: { idPhongThi: this.id } })
+        .then((response) => {
+          this.key = response.data.results[0].key;
+          this.loading = false;
+        });
+      await http
+        .get(`/sv/ctdt/`, { params: { key: this.key } })
+        .then((response) => {
+          store.dispatch("attempt/setCTDT", response.data["results"]);
+          this.loading = false;
+          this.$router.push(`/test/${this.id}/attempt`);
+        });
     },
   },
 };
