@@ -80,7 +80,7 @@ const routes = [
               },
               {
                 path: "/test/:testId/all",
-                name: "Test",
+                name: "All test",
                 props: true,
                 meta: {
                   requireAuth: true,

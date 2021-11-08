@@ -11,7 +11,7 @@
               <FormItem :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Họ và tên</span>
-                  <input type="text" readonly v-model="data.name" />
+                  <input type="text" readonly v-model="data.full_name" />
                 </div>
               </FormItem>
               <FormItem :showLabel="false">
@@ -35,13 +35,13 @@
               <FormItem :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Mã số sinh viên</span>
-                  <input type="text" readonly v-model="data.mssv" />
+                  <input type="text" readonly v-model="data.sid" />
                 </div>
               </FormItem>
               <FormItem :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Ngày tháng năm sinh</span>
-                  <input type="text" readonly v-model="data.dob" />
+                  <input type="text" readonly v-model="data.date_of_birth" />
                 </div>
               </FormItem>
               <FormItem :showLabel="false">
@@ -70,28 +70,10 @@
 </template>
 
 <script>
-import http from "../../http-common";
 export default {
+  props: ["data"],
   data() {
-    return {
-      src: "https://i1.go2yd.com/image.php?url=0Kvq81cKR1",
-      newAva: undefined,
-      data: {
-        name: "Cao Trọng Nghĩa",
-        dob: "28/11/2000",
-        school: "Đại học Công nghệ Thông tin - ĐHQG TP.HCM",
-        sex: "Nam",
-        mssv: "18521138",
-        email: "18521138@gm.uit.edu.vn",
-        phone: "0364857809",
-        cid: "123456789",
-      },
-    };
-  },
-  mounted() {
-    http.get("/profile/me/").then((data) => {
-      console.log(data);
-    });
+    return {};
   },
 };
 </script>

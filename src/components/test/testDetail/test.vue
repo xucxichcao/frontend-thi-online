@@ -74,63 +74,68 @@
 export default {
   data() {
     return {
-      questAmt: 2,
-      current: 0,
-      userChoice: [],
-      question: [
-        {
-          questionType: 1,
-          id: 0,
-          content: "Sinh viên Cao Trọng Nghĩa rất là?",
-          answers: [
-            {
-              id: 1,
-              content: "Đẹp trai",
-            },
-            {
-              id: 2,
-              content: "Xấu",
-            },
-            {
-              id: 3,
-              content: "Gầy",
-            },
-            {
-              id: 4,
-              content: "Không có đáp án nào đúng",
-            },
-          ],
-        },
-        {
-          questionType: 1,
-          id: 1,
-          content: "Sinh viên Huỳnh Mạnh Hùng rất là?",
-          answers: [
-            {
-              id: 1,
-              content: "Thích ăn mì cay x2",
-            },
-            {
-              id: 2,
-              content: "Giàu",
-            },
-            {
-              id: 3,
-              content: "Chúa hề",
-            },
-            {
-              id: 4,
-              content: "Tất cả đều đúng",
-            },
-          ],
-        },
-      ],
+      // questAmt: 2,
+      // current: 0,
+      // userChoice: [],
+      // question: [
+      //   {
+      //     questionType: 1,
+      //     id: 0,
+      //     content: "Sinh viên Cao Trọng Nghĩa rất là?",
+      //     answers: [
+      //       {
+      //         id: 1,
+      //         content: "Đẹp trai",
+      //       },
+      //       {
+      //         id: 2,
+      //         content: "Xấu",
+      //       },
+      //       {
+      //         id: 3,
+      //         content: "Gầy",
+      //       },
+      //       {
+      //         id: 4,
+      //         content: "Không có đáp án nào đúng",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     questionType: 1,
+      //     id: 1,
+      //     content: "Sinh viên Huỳnh Mạnh Hùng rất là?",
+      //     answers: [
+      //       {
+      //         id: 1,
+      //         content: "Thích ăn mì cay x2",
+      //       },
+      //       {
+      //         id: 2,
+      //         content: "Giàu",
+      //       },
+      //       {
+      //         id: 3,
+      //         content: "Chúa hề",
+      //       },
+      //       {
+      //         id: 4,
+      //         content: "Tất cả đều đúng",
+      //       },
+      //     ],
+      //   },
+      // ],
     };
   },
   mounted() {
     this.question.forEach(() => {
       this.userChoice.push(undefined);
     });
+  },
+  computed: {
+    question() {
+      return this.$store.state.attempt.attempt;
+    },
   },
 };
 </script>
