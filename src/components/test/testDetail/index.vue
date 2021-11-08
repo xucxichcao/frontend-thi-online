@@ -4,40 +4,75 @@
       <span class="h-panel-title"
         ><h2>{{ phongThi.tenPhongThi }}</h2></span
       >
-      <p>Thời gian thi: {{ phongThi.thoiGianThi }}</p>
-      <p>
-        Giảng viên: <a class="text" href="#">{{ phongThi.giangVien }}</a>
-      </p>
+      <Row :space="30">
+        <Col width="12">
+          <p>Thời gian thi: {{ phongThi.thoiGianThi }}</p>
+          <p>
+            Giảng viên: <a class="text" href="#">{{ phongThi.giangVien }}</a>
+          </p>
+          <p>Học kì: {{ phongThi.hocKi }}</p>
+          <p>Năm học: {{ phongThi.namHoc }}</p>
+          <p>Sỉ số: {{ phongThi.siSo }}</p>
+          <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }}</p>
+          <p v-if="phongThi.diem">Kết quả: {{ phongThi.diem }}</p></Col
+        >
+        <Col width="12">
+          <p>Số lượng câu hỏi: {{ dethi.soLuongCauHoi }}</p>
+        </Col>
+      </Row>
     </div>
     <div class="h-panel-body">
       <div class="thi">
         <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }}</p>
         <div class="button">
-          <Button>Vào thi</Button>
+          <Button @click="vaoThi()">Vào thi</Button>
           <router-link tag="Button" :to="{ name: 'Home core' }"
             >Trờ về trang chủ</router-link
           >
         </div>
       </div>
     </div>
+    <Loading :loading="loading"></Loading>
   </div>
 </template>
 
 <script>
+import http from "../../../http-common";
+import store from "../../../store/index";
 export default {
   data() {
     return {
-      phongThi: {
-        id: "0",
-        tenPhongThi: "IT003 - Cấu trúc dữ liệu và giải thuật",
-        siSo: "40",
-        giangVien: "Huỳnh Mạnh Hùng",
-        thoiGianLamBai: "60 phút",
-        thoiGianThi: "11/02/2021 - 10:30 am",
-        namHoc: "2021-2022",
-        hocKy: "Học kỳ 2",
-      },
+      phongThi: {},
+      id: this.$route.params.testId,
+      loading: false,
+      dethi: {},
+      key: "",
     };
+  },
+  mounted() {
+    this.loading = true;
+    http.get("/sv/phong-thi/" + this.id).then((response) => {
+      this.phongThi = response.data;
+      this.loading = false;
+    });
+    http.get(`/sv/get-de-thi/?idPhongThi=${this.id}`).then((response) => {
+      this.dethi = response.data.results[0];
+      this.loading = false;
+    });
+    http.get(`/sv/get-key/?idPhongThi=${this.id}`).then((response) => {
+      this.key = response.data.results[0].key;
+      this.loading = false;
+    });
+  },
+  methods: {
+    vaoThi() {
+      this.loading = true;
+      http.get(`/sv/ctdt/?key=${this.key}`).then((response) => {
+        store.dispatch("attempt/setAttempt", response.data);
+        this.loading = false;
+        this.$router.push(`/test/${this.id}/attempt`);
+      });
+    },
   },
 };
 </script>

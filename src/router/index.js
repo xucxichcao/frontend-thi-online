@@ -1,33 +1,47 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-// import store from "../store/index";
+import store from "../store/index";
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
     props: true,
-    meta: { requireAuth: true, name: "Trang chủ" },
+    meta: {
+      requireAuth: true,
+      name: "Trang chủ",
+    },
     component: () => import("../views/Home.vue"),
     children: [
       {
         path: "",
         name: "Home core",
         props: true,
-        meta: { requireAuth: true, name: "Trang chủ", sideBar: "Home core" },
+        meta: {
+          requireAuth: true,
+          name: "Trang chủ",
+          sideBar: "Home core",
+        },
         component: () => import("../components/home/core.vue"),
       },
       {
         path: "/test",
         props: true,
-        meta: { requireAuth: true, name: "Bài thi" },
+        meta: {
+          requireAuth: true,
+          name: "Bài thi",
+        },
         component: () => import("../components/test/core.vue"),
         children: [
           {
             path: "",
             name: "Test list",
             props: true,
-            meta: { requireAuth: true, name: "Bài thi", sideBar: "Test list" },
+            meta: {
+              requireAuth: true,
+              name: "Bài thi",
+              sideBar: "Test list",
+            },
             component: () => import("../components/test/testList.vue"),
           },
           {
@@ -66,7 +80,7 @@ const routes = [
               },
               {
                 path: "/test/:testId/all",
-                name: "Test",
+                name: "All test",
                 props: true,
                 meta: {
                   requireAuth: true,
@@ -119,7 +133,10 @@ const routes = [
       {
         path: "/setting",
         props: true,
-        meta: { requireAuth: true, name: "Tùy chỉnh tài khoản" },
+        meta: {
+          requireAuth: true,
+          name: "Tùy chỉnh tài khoản",
+        },
         component: () => import("../components/settings/core.vue"),
         children: [
           {
@@ -150,7 +167,10 @@ const routes = [
       {
         path: "/exam",
         props: true,
-        meta: { requireAuth: true, name: "Danh sách bài thi" },
+        meta: {
+          requireAuth: true,
+          name: "Danh sách bài thi",
+        },
         component: () => import("../components/exam/core.vue"),
         children: [
           {
@@ -180,7 +200,10 @@ const routes = [
       {
         path: "/school",
         props: true,
-        meta: { requireAuth: true, name: "Nhà trường" },
+        meta: {
+          requireAuth: true,
+          name: "Nhà trường",
+        },
         component: () => import("../components/school/core.vue"),
         children: [
           {
@@ -235,18 +258,31 @@ const router = new VueRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some((record) => record.meta.requireAuth)) {
-//     // this route requires auth, check if logged in
-//     // if not, redirect to login page.
-//     if (!store.getters["account/getAuthen"]) {
-//       next({ name: "Signin" });
-//     } else {
-//       next(); // go to wherever I'm going
-//     }
-//   } else {
-//     next(); // does not require auth, make sure to always call next()!
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requireAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!store.getters["account/getAuthen"]) {
+      next({
+        name: "Signin",
+      });
+    } else {
+      next(); // go to wherever I'm going
+    }
+  } else if (
+    to.matched.some((record) => record.name == "Signin") ||
+    to.matched.some((record) => record.name == "Signup")
+  ) {
+    if (store.getters["account/getAuthen"]) {
+      next({
+        name: "Home core",
+      });
+    } else {
+      next();
+    }
+  } else {
+    next(); // does not require auth, make sure to always call next()!
+  }
+});
 
 export default router;

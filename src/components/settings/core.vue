@@ -10,7 +10,7 @@
                 <Row :space="10">
                   <Cell width="24">
                     <div class="avatar-group">
-                      <Avatar :src="src" :width="150"></Avatar>
+                      <Avatar :src="data.avatar" :width="150"></Avatar>
                     </div>
                   </Cell>
                   <Cell
@@ -38,19 +38,21 @@
             </div>
           </Cell>
           <Cell width="17" :xs="0" :sm="0" :md="0">
-            <router-view> </router-view>
+            <router-view :data="this.data"> </router-view>
           </Cell>
         </Row>
+        <Loading :loading="loading"></Loading>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import http from "../../http-common";
+
 export default {
   data() {
     return {
-      src: "https://i1.go2yd.com/image.php?url=0Kvq81cKR1",
       newAva: undefined,
       menuData: [
         {
@@ -66,7 +68,16 @@ export default {
           name: "Setting password",
         },
       ],
+      data: {},
+      loading: false,
     };
+  },
+  mounted() {
+    this.loading = true;
+    http.get("/profile/me/").then((response) => {
+      this.data = response.data.results[0];
+      this.loading = false;
+    });
   },
 };
 </script>

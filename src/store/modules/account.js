@@ -1,9 +1,18 @@
-const state = {
-  user: {},
-  isAuthenticated: false,
-  token: "",
-  message: "",
-};
+const token = localStorage.getItem("token");
+
+const state = token
+  ? {
+      user: {},
+      isAuthenticated: true,
+      token: token,
+      message: "",
+    }
+  : {
+      user: {},
+      isAuthenticated: false,
+      token: "",
+      message: "",
+    };
 const getters = {
   getAuthen(state) {
     return state.isAuthenticated;

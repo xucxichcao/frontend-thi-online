@@ -7,7 +7,7 @@
       <div>
         <div
           class="phongThi"
-          v-for="phongThi in danhSachPhongThi"
+          v-for="phongThi in danhSachPhongThi.results"
           :key="phongThi.id"
         >
           <div class="icon">
@@ -27,49 +27,38 @@
                   <a class="text" href="#">{{ phongThi.giangVien }}</a>
                 </p>
                 <p>Sĩ số: {{ phongThi.siSo }}</p>
-                <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }}</p>
+                <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }} phút</p>
               </Cell>
               <Cell width="12">
                 <p>Thời gian thi: {{ phongThi.thoiGianThi }}</p>
                 <p>Năm học: {{ phongThi.namHoc }}</p>
-                <p>Học kỳ: {{ phongThi.hocKy }}</p>
+                <p>Học kỳ: {{ phongThi.hocKi }}</p>
+                <p v-if="phongThi.diem">Kết quả: {{ phongThi.diem }}</p>
               </Cell>
             </Row>
           </div>
         </div>
       </div>
     </div>
+    <Loading :loading="loading"></Loading>
   </div>
 </template>
 
 <script>
+import http from "../../../http-common";
 export default {
   data() {
     return {
-      danhSachPhongThi: [
-        {
-          id: "0",
-          tenPhongThi: "IT003 - Cấu trúc dữ liệu và giải thuật",
-          siSo: "40",
-          giangVien: "Huỳnh Mạnh Hùng",
-          thoiGianLamBai: "60 phút",
-          thoiGianThi: "11/02/2021 - 10:30 am",
-          namHoc: "2021-2022",
-          hocKy: "Học kỳ 2",
-        },
-        {
-          id: "1",
-          tenPhongThi:
-            "Thương mại Điện tử và Triển khai ứng dụng - NT210.M11.MMCL",
-          siSo: "35",
-          giangVien: "Huỳnh Hùng",
-          thoiGianLamBai: "45 phút",
-          thoiGianThi: "11/02/2021 - 7:30 am",
-          namHoc: "2021-2022",
-          hocKy: "Học kỳ 2",
-        },
-      ],
+      danhSachPhongThi: {},
+      loading: false,
     };
+  },
+  mounted() {
+    this.loading = true;
+    http.get("/sv/phong-thi/").then((response) => {
+      this.danhSachPhongThi = response.data;
+      this.loading = false;
+    });
   },
 };
 </script>
