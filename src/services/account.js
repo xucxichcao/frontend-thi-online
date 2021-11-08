@@ -7,7 +7,7 @@ export const userService = {
   logout,
 };
 
-function login(email, password) {
+function login(email, password, router) {
   const userData = {
     email,
     password,
@@ -19,6 +19,7 @@ function login(email, password) {
       store.dispatch("account/setIsAuthenticated", true);
       setToken(authToken);
       getCurrentUser();
+      router.push({ name: "Home core" });
     })
     .catch((error) => {
       unsetCurrentUser();

@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import http from "../../../http-common";
 export default {
   data() {
     return {
@@ -70,6 +71,11 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    http.get("/sv/phong-thi/").then((data) => {
+      console.log(data);
+    });
   },
 };
 </script>

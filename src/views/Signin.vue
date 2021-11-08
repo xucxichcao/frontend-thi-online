@@ -64,10 +64,11 @@ export default {
   methods: {
     signIn() {
       this.loading = true;
-      userService.login(this.user.email, this.user.password).then(() => {
-        this.loading = false;
-        this.$router.push({ name: "Home core" });
-      });
+      userService
+        .login(this.user.email, this.user.password, this.$router)
+        .then(() => {
+          this.loading = false;
+        });
     },
   },
 };

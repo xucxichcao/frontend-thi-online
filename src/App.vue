@@ -30,7 +30,7 @@ body {
 </style>
 <script>
 import { setAxiosAuthToken } from "./helpers/auth-header";
-import http from "./http-common";
+// import http from "./http-common";
 export default {
   methods: {
     isEmpty(value) {
@@ -45,21 +45,6 @@ export default {
   created: function () {
     if (!this.isEmpty(localStorage.getItem("token"))) {
       setAxiosAuthToken(localStorage.getItem("token"));
-      http
-        .get("/auth/user/")
-        .then(() => {
-          this.$store.dispatch(
-            "account/setToken",
-            localStorage.getItem("token")
-          );
-          this.$store.dispatch("account/setIsAuthenticated", true);
-        })
-        .catch((error) => {
-          setAxiosAuthToken("");
-          if (error.response) {
-            console.log(error.response.status);
-          }
-        });
     }
   },
 };

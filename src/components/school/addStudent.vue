@@ -19,6 +19,7 @@
               <Table :datas="datas" stripe>
                 <TableItem title="MSSV" prop="mssv"></TableItem>
                 <TableItem title="Email" prop="email"></TableItem>
+                <TableItem title="Mật khẩu" prop="matKhau"></TableItem>
                 <TableItem title="Họ và tên" prop="hoTen"></TableItem>
                 <TableItem
                   title="Giới tính (M/F)"
@@ -48,6 +49,7 @@ export default {
         {
           mssv: "18521138",
           email: "18521138@gm.uit.edu.vn",
+          matKhau: "123",
           hoTen: "Cao Trọng Nghĩa",
           gioiTinh: "M",
           cmnd: "123456789",
@@ -57,6 +59,7 @@ export default {
         {
           mssv: "18520795",
           email: "18520795@gm.uit.edu.vn",
+          matKhau: "123",
           hoTen: "Huỳnh Mạnh Hùng",
           gioiTinh: "M",
           cmnd: "123456789",
@@ -66,6 +69,7 @@ export default {
         {
           mssv: "18521103",
           email: "18521103@gm.uit.edu.vn",
+          matKhau: "123",
           hoTen: "Lê Hải Minh",
           gioiTinh: "M",
           cmnd: "123456789",

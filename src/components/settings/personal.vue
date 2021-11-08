@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import http from "../../http-common";
 export default {
   data() {
     return {
@@ -86,6 +87,11 @@ export default {
         cid: "123456789",
       },
     };
+  },
+  mounted() {
+    http.get("/profile/me/").then((data) => {
+      console.log(data);
+    });
   },
 };
 </script>
