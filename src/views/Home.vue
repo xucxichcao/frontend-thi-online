@@ -68,25 +68,6 @@ export default {
       ],
     };
   },
-  computed: {
-    breadCrumbs() {
-      let pathArray = this.$route.path.split("/");
-      let breadCrumbArray = [
-        { title: "Trang chủ", route: { name: "Home core" } },
-      ];
-      pathArray.forEach((e, i) => {
-        if (i === pathArray.length - 1 && e !== "") {
-          breadCrumbArray.push({ title: this.$route.matched[i].meta.name });
-        } else if (e !== "") {
-          breadCrumbArray.push({
-            title: this.$route.matched[i].meta.name,
-            route: this.$route.matched[i].path,
-          });
-        }
-      });
-      return breadCrumbArray;
-    },
-  },
   watch: {
     $route() {
       if (this.$route.name) {

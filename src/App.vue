@@ -27,6 +27,22 @@ body {
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
 }
+.breadcrumb {
+  padding: 5px 8px;
+  margin: 10px 0;
+}
+.breadcrumb .breadcrumb-item {
+  display: inline;
+  font-size: 15px;
+}
+.breadcrumb li + li::before {
+  padding-left: 8px;
+  color: #249eff;
+  content: "/\00a0";
+}
+.breadcrumb li a:hover {
+  text-decoration: none;
+}
 </style>
 <script>
 import { setAxiosAuthToken } from "./helpers/auth-header";
