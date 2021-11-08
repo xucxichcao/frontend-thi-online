@@ -33,10 +33,7 @@
         <Content
           style="padding: 0px 30px; display: flex; flex-direction: column"
         >
-          <Breadcrumb
-            :datas="breadCrumbs"
-            style="margin: 15px 0px"
-          ></Breadcrumb>
+          <Breadcrumbs />
           <router-view :key="$route.path"></router-view>
         </Content>
         <HFooter class="footer-height">

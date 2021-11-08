@@ -27,7 +27,7 @@
               <div class="icon">
                 <router-link
                   tag="a"
-                  :to="{ name: 'Test detail', params: { testId: phongThi.id } }"
+                  :to="{ name: 'Exam detail', params: { examId: phongThi.id } }"
                 >
                   <i class="h-icon-task"></i>
                   {{ phongThi.tenPhongThi }}</router-link
