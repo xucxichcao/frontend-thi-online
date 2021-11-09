@@ -6,6 +6,19 @@
           <span class="h-panel-title">Trang đăng nhập thi online</span>
         </div>
         <div class="h-panel-body">
+          <Row
+            v-if="this.message"
+            :space="20"
+            type="flex"
+            justify="center"
+            align="center"
+          >
+            <Cell :xs="22" :sm="20" :md="12" width="10">
+              <div class="error">
+                <p>{{ this.message }}</p>
+              </div>
+            </Cell>
+          </Row>
           <Row :space="20" type="flex" justify="center" align="center">
             <Cell :xs="22" :sm="20" :md="12" width="10">
               <Form
@@ -24,6 +37,7 @@
                     v-model="user.password"
                   />
                 </FormItem>
+
                 <FormItem :showLabel="false">
                   <Button block color="primary" @click="signIn()"
                     >Đăng nhập</Button
@@ -68,7 +82,15 @@ export default {
         .login(this.user.email, this.user.password, this.$router)
         .then(() => {
           this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
         });
+    },
+  },
+  computed: {
+    message() {
+      return this.$store.getters["account/getMessage"];
     },
   },
 };
@@ -87,5 +109,14 @@ export default {
 }
 #signin {
   margin-top: 3rem !important;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  color: #691911;
+  background-color: #f4d6d2;
+  border-color: #f0c5c1;
+  margin-bottom: 1rem !important;
 }
 </style>
