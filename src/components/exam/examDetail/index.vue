@@ -12,20 +12,26 @@
           </p>
           <p>Học kì: {{ phongThi.hocKi }}</p>
           <p>Năm học: {{ phongThi.namHoc }}</p>
-          <p>Sỉ số: {{ phongThi.siSo }}</p>
-          <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }}</p>
           <p v-if="phongThi.diem">Kết quả: {{ phongThi.diem }}</p></Col
         >
         <Col width="12">
-          <p>Số lượng câu hỏi: {{ dethi.soLuongCauHoi }}</p>
+          <p v-if="this.role == 'Sinh viên'">
+            Số lượng câu hỏi: {{ dethi.soLuongCauHoi }}
+          </p>
         </Col>
       </Row>
     </div>
     <div class="h-panel-body">
       <div class="thi">
-        <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }}</p>
         <div class="button">
-          <Button @click="vaoThi()">Vào thi</Button>
+          <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }} phút</p>
+          <Button v-if="this.role == 'Giảng viên'" @click="vaoThi()"
+            >Xem chi tiết đề thi</Button
+          >
+          <Button v-else-if="this.role == 'Sinh viên'" @click="vaoThi()"
+            >Vào thi</Button
+          >
+
           <router-link tag="Button" :to="{ name: 'Home core' }"
             >Trờ về trang chủ</router-link
           >
@@ -47,36 +53,58 @@ export default {
       loading: false,
       dethi: {},
       key: "",
+      role: "",
     };
   },
   async mounted() {
     this.loading = true;
-    await http.get("/sv/phong-thi/" + this.id).then((response) => {
-      this.phongThi = response.data;
-    });
-    await http
-      .get(`/sv/get-de-thi/`, { params: { idPhongThi: this.id } })
-      .then((response) => {
-        this.dethi = response.data.results[0];
+    this.role = this.$store.getters["account/getRole"];
+    if (this.role == "Sinh viên") {
+      await http.get("/sv/phong-thi/" + this.id).then((response) => {
+        this.phongThi = response.data;
+        store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
         this.loading = false;
       });
+      await http
+        .get(`/sv/get-de-thi/`, { params: { idPhongThi: this.id } })
+        .then((response) => {
+          this.dethi = response.data.results[0];
+          this.loading = false;
+        });
+    } else if (this.role == "Giảng viên") {
+      await http.get("/gv/phong-thi/" + this.id).then((response) => {
+        this.phongThi = response.data;
+        store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
+        this.loading = false;
+      });
+    }
   },
   methods: {
     async vaoThi() {
       this.loading = true;
-      await http
-        .get(`/sv/get-key/`, { params: { idPhongThi: this.id } })
-        .then((response) => {
-          this.key = response.data.results[0].key;
-          this.loading = false;
-        });
-      await http
-        .get(`/sv/ctdt/`, { params: { key: this.key } })
-        .then((response) => {
-          store.dispatch("attempt/setCTDT", response.data["results"]);
-          this.loading = false;
-          this.$router.push(`/exam/${this.id}/attempt`);
-        });
+      if (this.role == "Sinh viên") {
+        await http
+          .get(`/sv/get-key/`, { params: { idPhongThi: this.id } })
+          .then((response) => {
+            this.key = response.data.results[0].key;
+            this.loading = false;
+          });
+        await http
+          .get(`/sv/ctdt/`, { params: { key: this.key } })
+          .then((response) => {
+            store.dispatch("attempt/setCTDT", response.data["results"]);
+            this.loading = false;
+            this.$router.push(`/exam/${this.id}/attempt`);
+          });
+      } else if (this.role == "Giảng viên") {
+        await http
+          .get(`/gv/ctdt/`, { params: { idPhongThi: this.id } })
+          .then((response) => {
+            store.dispatch("attempt/setCTDT", response.data["results"]);
+            this.loading = false;
+            this.$router.push(`/exam/${this.id}/all`);
+          });
+      }
     },
   },
 };

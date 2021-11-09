@@ -6,12 +6,14 @@ const state = token
       isAuthenticated: true,
       token: token,
       message: "",
+      role: "",
     }
   : {
       user: {},
       isAuthenticated: false,
       token: "",
       message: "",
+      role: "",
     };
 const getters = {
   getAuthen(state) {
@@ -22,6 +24,9 @@ const getters = {
   },
   getMessage(state) {
     return state.message;
+  },
+  getRole(state) {
+    return state.role;
   },
 };
 const actions = {
@@ -39,6 +44,9 @@ const actions = {
   },
   setMessages(context, payload) {
     context.commit("SET_MESSAGE", payload);
+  },
+  setRole(context, payload) {
+    context.commit("SET_ROLE", payload);
   },
 };
 const mutations = {
@@ -58,6 +66,9 @@ const mutations = {
   },
   SET_MESSAGE(state, value) {
     state.message = value;
+  },
+  SET_ROLE(state, value) {
+    state.role = value;
   },
 };
 

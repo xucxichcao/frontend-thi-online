@@ -46,19 +46,29 @@
 
 <script>
 import http from "../../../http-common";
+
 export default {
   data() {
     return {
       danhSachPhongThi: {},
       loading: false,
+      role: "",
     };
   },
-  mounted() {
+  async mounted() {
     this.loading = true;
-    http.get("/sv/phong-thi/").then((response) => {
-      this.danhSachPhongThi = response.data;
-      this.loading = false;
-    });
+    this.role = this.$store.getters["account/getRole"];
+    if (this.role == "Sinh viên") {
+      await http.get("/sv/phong-thi/").then((response) => {
+        this.danhSachPhongThi = response.data;
+        this.loading = false;
+      });
+    } else if (this.role == "Giảng viên") {
+      await http.get("/gv/phong-thi/").then((response) => {
+        this.danhSachPhongThi = response.data;
+        this.loading = false;
+      });
+    }
   },
 };
 </script>
