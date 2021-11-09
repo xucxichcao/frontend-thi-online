@@ -53,31 +53,21 @@ export default {
       loading: false,
       dethi: {},
       key: "",
-      role: "",
     };
+  },
+  computed: {
+    role() {
+      return this.$store.getters["account/getRole"];
+    },
+  },
+  watch: {
+    role() {
+      this.loadData(this.role);
+    },
   },
   async mounted() {
     this.loading = true;
-    this.role = this.$store.getters["account/getRole"];
-    if (this.role == "Sinh viên") {
-      await http.get("/sv/phong-thi/" + this.id).then((response) => {
-        this.phongThi = response.data;
-        store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
-        this.loading = false;
-      });
-      await http
-        .get(`/sv/get-de-thi/`, { params: { idPhongThi: this.id } })
-        .then((response) => {
-          this.dethi = response.data.results[0];
-          this.loading = false;
-        });
-    } else if (this.role == "Giảng viên") {
-      await http.get("/gv/phong-thi/" + this.id).then((response) => {
-        this.phongThi = response.data;
-        store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
-        this.loading = false;
-      });
-    }
+    await this.loadData(this.role);
   },
   methods: {
     async vaoThi() {
@@ -104,6 +94,27 @@ export default {
             this.loading = false;
             this.$router.push(`/exam/${this.id}/all`);
           });
+      }
+    },
+    async loadData(newRole) {
+      if (newRole == "Sinh viên") {
+        await http.get("/sv/phong-thi/" + this.id).then((response) => {
+          this.phongThi = response.data;
+          store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
+          this.loading = false;
+        });
+        await http
+          .get(`/sv/get-de-thi/`, { params: { idPhongThi: this.id } })
+          .then((response) => {
+            this.dethi = response.data.results[0];
+            this.loading = false;
+          });
+      } else if (newRole == "Giảng viên") {
+        await http.get("/gv/phong-thi/" + this.id).then((response) => {
+          this.phongThi = response.data;
+          store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
+          this.loading = false;
+        });
       }
     },
   },

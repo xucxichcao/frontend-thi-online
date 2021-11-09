@@ -59,7 +59,6 @@ export default {
       );
     },
   },
-
   created: async function () {
     if (!this.isEmpty(localStorage.getItem("token"))) {
       setAxiosAuthToken(localStorage.getItem("token"));

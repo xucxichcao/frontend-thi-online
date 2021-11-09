@@ -52,23 +52,36 @@ export default {
     return {
       danhSachPhongThi: {},
       loading: false,
-      role: "",
     };
+  },
+  computed: {
+    role() {
+      return this.$store.getters["account/getRole"];
+    },
+  },
+  watch: {
+    role() {
+      this.loadData(this.role);
+    },
   },
   async mounted() {
     this.loading = true;
-    this.role = this.$store.getters["account/getRole"];
-    if (this.role == "Sinh viên") {
-      await http.get("/sv/phong-thi/").then((response) => {
-        this.danhSachPhongThi = response.data;
-        this.loading = false;
-      });
-    } else if (this.role == "Giảng viên") {
-      await http.get("/gv/phong-thi/").then((response) => {
-        this.danhSachPhongThi = response.data;
-        this.loading = false;
-      });
-    }
+    await this.loadData(this.role);
+  },
+  methods: {
+    async loadData(role) {
+      if (role == "Sinh viên") {
+        await http.get("/sv/phong-thi/").then((response) => {
+          this.danhSachPhongThi = response.data;
+          this.loading = false;
+        });
+      } else if (role == "Giảng viên") {
+        await http.get("/gv/phong-thi/").then((response) => {
+          this.danhSachPhongThi = response.data;
+          this.loading = false;
+        });
+      }
+    },
   },
 };
 </script>

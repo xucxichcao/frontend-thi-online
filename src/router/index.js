@@ -63,7 +63,7 @@ const routes = [
             meta: {
               requireAuth: true,
               breadcrumb() {
-                return "Phòng thi ";
+                return store.getters["attempt/getTenPhongThi"];
               },
               sideBar: "Exam list",
             },
