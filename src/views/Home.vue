@@ -25,7 +25,7 @@
               style="font-size: 20px; margin: 0 30px"
               @click="siderCollapsed = !siderCollapsed"
             ></Button>
-            <Button size="l" noBorder
+            <Button size="l" noBorder @click="signOut()"
               ><font-awesome-icon icon="sign-out-alt" size="lg"
             /></Button>
           </div>
@@ -39,7 +39,7 @@
         <HFooter class="footer-height">
           <span class="footer-text">
             Copyright © {{ year }}
-            <a href="http://www.ch-un.com" target="_blank">Lan</a></span
+            <a href="http://www.ch-un.com" target="_blank">UIT@MMT</a></span
           >
         </HFooter>
       </Layout>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { userService } from "../services/account";
 export default {
   name: "Home",
   data() {
@@ -79,6 +80,10 @@ export default {
     trigger(data) {
       if (data.children.length > 0) return;
       this.$router.push({ name: data.key });
+    },
+    signOut() {
+      userService.logout();
+      this.$router.push({ name: "Signin" });
     },
   },
   mounted() {

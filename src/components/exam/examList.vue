@@ -69,44 +69,14 @@ export default {
           {
             id: "1",
             title: "Học kỳ 1",
-            children: [
-              { id: 4, title: "oop1", ngayThi: "01-01-2021", tinhTrang: true },
-              {
-                id: 5,
-                title: "oop2",
-                ngayThi: "01-02-2021",
-                tinhTrang: false,
-              },
-              { id: 6, title: "oop3", ngayThi: "01-03-2021", tinhTrang: true },
-            ],
           },
           {
             id: "2",
             title: "Học kỳ 2",
-            children: [
-              { id: 7, title: "oop1", ngayThi: "01-01-2021", tinhTrang: true },
-              {
-                id: 8,
-                title: "oop2",
-                ngayThi: "01-02-2021",
-                tinhTrang: false,
-              },
-              { id: 9, title: "oop3", ngayThi: "01-03-2021", tinhTrang: true },
-            ],
           },
           {
             id: "3",
             title: "Học kỳ 3",
-            children: [
-              { id: 10, title: "oop1", ngayThi: "01-01-2021", tinhTrang: true },
-              {
-                id: 11,
-                title: "oop2",
-                ngayThi: "01-02-2021",
-                tinhTrang: false,
-              },
-              { id: 12, title: "oop3", ngayThi: "01-03-2021", tinhTrang: true },
-            ],
           },
         ],
       },
