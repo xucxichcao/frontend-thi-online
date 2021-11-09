@@ -82,8 +82,7 @@ export default {
       this.$router.push({ name: data.key });
     },
     signOut() {
-      userService.logout();
-      this.$router.push({ name: "Signin" });
+      userService.logout(this.$router);
     },
   },
   mounted() {

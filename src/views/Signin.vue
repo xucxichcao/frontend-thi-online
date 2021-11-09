@@ -1,5 +1,5 @@
 <template>
-  <Row id="signin" type="flex" space="20" justify="center">
+  <Row id="signin" type="flex" :space="20" justify="center">
     <Cell :xs="22" :sm="20" :md="18" width="12">
       <div class="h-panel">
         <div class="h-panel-bar grey-bg">
@@ -13,13 +13,13 @@
             justify="center"
             align="center"
           >
-            <Cell :xs="22" :sm="20" :md="12" width="10">
+            <Cell :xs="22" :sm="20" :md="12" width="23">
               <div class="error">
-                <p>{{ this.message }}</p>
+                {{ this.message }}
               </div>
             </Cell>
           </Row>
-          <Row :space="20" type="flex" justify="center" align="center">
+          <Row :space="20" type="flex" justify="center">
             <Cell :xs="22" :sm="20" :md="12" width="10">
               <Form
                 mode="block"
@@ -113,10 +113,10 @@ export default {
 
 .error {
   display: flex;
-  justify-content: center;
   color: #691911;
   background-color: #f4d6d2;
   border-color: #f0c5c1;
   margin-bottom: 1rem !important;
+  padding: 0.75rem 1.25rem;
 }
 </style>

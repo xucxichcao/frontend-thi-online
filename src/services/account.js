@@ -27,18 +27,10 @@ function login(email, password, router) {
     .catch((error) => {
       unsetCurrentUser();
       if (error.response) {
-        store.dispatch(
-          "account/setMessages",
-          // error.response.data["non_field_error"],
-          "Sai tài khoản hoặc mật khẩu"
-        );
+        store.dispatch("account/setMessages", "Sai tài khoản hoặc mật khẩu");
         store.dispatch("account/setIsAuthenticated", false);
       } else if (error.message) {
-        store.dispatch(
-          "account/setMessages",
-          // error.message,
-          "Sai tài khoản hoặc mật khẩu"
-        );
+        store.dispatch("account/setMessages", "Lỗi hệ thống");
       }
     });
 }
@@ -68,14 +60,16 @@ function setToken(token) {
   store.dispatch("account/setToken", token);
 }
 
-function unsetCurrentUser() {
+function unsetCurrentUser(router) {
   setAxiosAuthToken("");
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   store.dispatch("account/unsetUser");
+  store.dispatch("account/setIsAuthenticated", false);
   store.dispatch("account/setMessages", "");
+  router.push({ name: "Signin" });
 }
 
-function logout() {
-  http.post("/auth/logout/").then(unsetCurrentUser);
+function logout(router) {
+  http.post("/auth/logout/").then(unsetCurrentUser(router));
 }

@@ -62,10 +62,10 @@ export default {
   created: async function () {
     if (!this.isEmpty(localStorage.getItem("token"))) {
       setAxiosAuthToken(localStorage.getItem("token"));
+      await http.get("/auth/user/").then((response) => {
+        store.dispatch("account/setRole", response.data.role);
+      });
     }
-    await http.get("/auth/user/").then((response) => {
-      store.dispatch("account/setRole", response.data.role);
-    });
   },
 };
 </script>
