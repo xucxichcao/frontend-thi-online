@@ -19,6 +19,9 @@ function login(email, password, router) {
       store.dispatch("account/setIsAuthenticated", true);
       setToken(authToken);
       getCurrentUser();
+      http.get("/auth/user/").then((response) => {
+        store.dispatch("account/setRole", response.data.role);
+      });
       router.push({ name: "Home core" });
     })
     .catch((error) => {

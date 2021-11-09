@@ -62,9 +62,9 @@ export default {
     loading: false,
   }),
   methods: {
-    signIn() {
+    async signIn() {
       this.loading = true;
-      userService
+      await userService
         .login(this.user.email, this.user.password, this.$router)
         .then(() => {
           this.loading = false;
