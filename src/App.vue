@@ -46,7 +46,8 @@ body {
 </style>
 <script>
 import { setAxiosAuthToken } from "./helpers/auth-header";
-// import http from "./http-common";
+import store from "./store/index";
+import http from "./http-common";
 export default {
   methods: {
     isEmpty(value) {
@@ -58,10 +59,14 @@ export default {
       );
     },
   },
-  created: function () {
+
+  created: async function () {
     if (!this.isEmpty(localStorage.getItem("token"))) {
       setAxiosAuthToken(localStorage.getItem("token"));
     }
+    await http.get("/auth/user/").then((response) => {
+      store.dispatch("account/setRole", response.data.role);
+    });
   },
 };
 </script>

@@ -86,7 +86,7 @@ export default {
     });
     var ctdt = this.$store.getters["attempt/getCTDT"];
     var qA = [];
-    console.log(this.$store.getters["attempt/getCTDT"]);
+    // console.log(this.$store.getters["attempt/getCTDT"]);
     for (let i = 0; i < ctdt.length; i++) {
       qA.push(JSON.parse(ctdt[i].noiDung));
       qA[i].num = i;
