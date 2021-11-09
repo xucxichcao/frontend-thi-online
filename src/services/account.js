@@ -28,12 +28,17 @@ function login(email, password, router) {
       unsetCurrentUser();
       if (error.response) {
         store.dispatch(
-          "account/setMessage",
-          error.response.data["non_field_error"]
+          "account/setMessages",
+          // error.response.data["non_field_error"],
+          "Sai tài khoản hoặc mật khẩu"
         );
         store.dispatch("account/setIsAuthenticated", false);
       } else if (error.message) {
-        store.dispatch("account/setMessage", error.message);
+        store.dispatch(
+          "account/setMessages",
+          // error.message,
+          "Sai tài khoản hoặc mật khẩu"
+        );
       }
     });
 }
@@ -68,6 +73,7 @@ function unsetCurrentUser() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   store.dispatch("account/unsetUser");
+  store.dispatch("account/setMessages", "");
 }
 
 function logout() {
