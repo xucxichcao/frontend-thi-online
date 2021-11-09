@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       phongThi: {},
-      id: this.$route.params.testId,
+      id: this.$route.params.examId,
       loading: false,
       dethi: {},
       key: "",
@@ -75,7 +75,7 @@ export default {
         .then((response) => {
           store.dispatch("attempt/setCTDT", response.data["results"]);
           this.loading = false;
-          this.$router.push(`/test/${this.id}/attempt`);
+          this.$router.push(`/exam/${this.id}/attempt`);
         });
     },
   },

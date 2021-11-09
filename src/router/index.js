@@ -10,6 +10,7 @@ const routes = [
     meta: {
       requireAuth: true,
       name: "Trang chủ",
+      breadcrumb: "Trang chủ",
     },
     component: () => import("../views/Home.vue"),
     children: [
@@ -19,108 +20,122 @@ const routes = [
         props: true,
         meta: {
           requireAuth: true,
-          name: "Trang chủ",
           sideBar: "Home core",
         },
         component: () => import("../components/home/core.vue"),
       },
       {
-        path: "/test",
+        path: "/exam",
         props: true,
         meta: {
           requireAuth: true,
           name: "Bài thi",
+          breadcrumb: "Bài thi",
         },
-        component: () => import("../components/test/core.vue"),
+        component: () => import("../components/exam/core.vue"),
         children: [
           {
             path: "",
-            name: "Test list",
+            name: "Exam list",
             props: true,
             meta: {
               requireAuth: true,
               name: "Bài thi",
-              sideBar: "Test list",
+              sideBar: "Exam list",
             },
-            component: () => import("../components/test/testList.vue"),
+            component: () => import("../components/exam/examList.vue"),
           },
           {
-            path: "/test/:testId",
+            path: "/exam/create",
+            name: "Create exam",
             props: true,
             meta: {
               requireAuth: true,
-              name: "Chi tiết bài thi",
-              sideBar: "Test list",
+              role: "Giảng viên",
+              breadcrumb: "Tạo đề thi",
+              sidebar: "Exam list",
             },
-            component: () => import("../components/test/testDetail.vue"),
+            component: () => import("../components/exam/createExam.vue"),
+          },
+          {
+            path: "/exam/:examId",
+            props: true,
+            meta: {
+              requireAuth: true,
+              breadcrumb() {
+                return "Phòng thi ";
+              },
+              sideBar: "Exam list",
+            },
+            component: () => import("../components/exam/examDetail.vue"),
             children: [
               {
-                path: "/test/:testId",
-                name: "Test detail",
+                path: "/exam/:examId",
+                name: "Exam detail",
                 props: true,
                 meta: {
                   requireAuth: true,
-                  name: "Chi tiết bài thi",
-                  sideBar: "Test list",
+                  breadcrumb: "Thông tin",
+                  sideBar: "Exam list",
                 },
                 component: () =>
-                  import("../components/test/testDetail/index.vue"),
+                  import("../components/exam/examDetail/index.vue"),
               },
               {
-                path: "/test/:testId/attempt",
-                name: "Test",
+                path: "/exam/:examId/attempt",
+                name: "Exam",
                 props: true,
                 meta: {
                   requireAuth: true,
-                  name: "Làm bài thi",
-                  sideBar: "Test list",
+                  breadcrumb: "Làm bài thi",
+                  sideBar: "Exam list",
                 },
                 component: () =>
-                  import("../components/test/testDetail/test.vue"),
+                  import("../components/exam/examDetail/exam.vue"),
               },
               {
-                path: "/test/:testId/all",
-                name: "All test",
+                path: "/exam/:examId/all",
+                name: "All exam",
                 props: true,
                 meta: {
                   requireAuth: true,
-                  name: "Tất cả câu hỏi",
-                  sideBar: "All question test list",
+                  breadcrumb: "Tất cả câu hỏi",
+                  sideBar: "Exam list",
                 },
                 component: () =>
-                  import("../components/test/testDetail/allQuestion.vue"),
+                  import("../components/exam/examDetail/allQuestion.vue"),
               },
               {
-                path: "/test/:testId/finish",
-                name: "Finish test",
+                path: "/exam/:examId/finish",
+                name: "Finish exam",
                 props: true,
                 meta: {
                   requireAuth: true,
                   name: "Hoàn thành bài thi",
-                  sideBar: "Test list",
+                  sideBar: "Exam list",
                 },
                 component: () =>
-                  import("../components/test/testDetail/finish.vue"),
+                  import("../components/exam/examDetail/finish.vue"),
               },
               {
-                path: "/test/:testId/monitor",
+                path: "/exam/:examId/monitor",
                 props: true,
                 meta: {
                   requireAuth: true,
-                  name: "Monitor test",
+                  name: "Monitor exam",
                   requireTeacher: true,
-                  sideBar: "Test list",
+                  sideBar: "Exam list",
                 },
                 component: () => import("../components/camera/core.vue"),
                 children: [
                   {
-                    path: "/test/:testId/monitor",
-                    name: "Monitor test default",
+                    path: "/exam/:examId/monitor",
+                    name: "Monitor exam default",
                     props: true,
                     meta: {
                       requireAuth: true,
-                      name: "Monitor test",
-                      sideBar: "Test list",
+                      name: "Monitor exam",
+                      sideBar: "Exam list",
                     },
                     component: () => import("../components/camera/camera.vue"),
                   },
@@ -135,7 +150,7 @@ const routes = [
         props: true,
         meta: {
           requireAuth: true,
-          name: "Tùy chỉnh tài khoản",
+          breadcrumb: "Tùy chỉnh tài khoản",
         },
         component: () => import("../components/settings/core.vue"),
         children: [
@@ -145,7 +160,7 @@ const routes = [
             props: true,
             meta: {
               requireAuth: true,
-              name: "Tùy chỉnh tài khoản",
+              breadcrumb: "Thông tin cá nhân",
               sideBar: "Setting default",
             },
             component: () => import("../components/settings/personal.vue"),
@@ -156,44 +171,11 @@ const routes = [
             props: true,
             meta: {
               requireAuth: true,
-              name: "Thay đổi mật khẩu",
+              breadcrumb: "Thay đổi mật khẩu",
               sideBar: "Setting default",
             },
             component: () =>
               import("../components/settings/settingPassword.vue"),
-          },
-        ],
-      },
-      {
-        path: "/exam",
-        props: true,
-        meta: {
-          requireAuth: true,
-          name: "Danh sách bài thi",
-        },
-        component: () => import("../components/exam/core.vue"),
-        children: [
-          {
-            path: "/exam",
-            name: "Exam default",
-            props: true,
-            meta: {
-              requireAuth: true,
-              name: "Danh sách bài thi",
-              sidebar: "Exam default",
-            },
-            component: () => import("../components/exam/listExam.vue"),
-          },
-          {
-            path: "/exam/create",
-            name: "Create exam",
-            props: true,
-            meta: {
-              requireAuth: true,
-              name: "Tạo đề thi",
-              sidebar: "Exam default",
-            },
-            component: () => import("../components/exam/createExam.vue"),
           },
         ],
       },
