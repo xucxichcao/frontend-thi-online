@@ -60,16 +60,18 @@ function setToken(token) {
   store.dispatch("account/setToken", token);
 }
 
-function unsetCurrentUser(router) {
+function unsetCurrentUser() {
   setAxiosAuthToken("");
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   store.dispatch("account/unsetUser");
   store.dispatch("account/setIsAuthenticated", false);
   store.dispatch("account/setMessages", "");
-  router.push({ name: "Signin" });
 }
 
 function logout(router) {
-  http.post("/auth/logout/").then(unsetCurrentUser(router));
+  http.post("/auth/logout/").then(() => {
+    unsetCurrentUser();
+    router.push({ name: "Signin" });
+  });
 }
