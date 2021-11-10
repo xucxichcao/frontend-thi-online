@@ -39,7 +39,15 @@
           </div>
         </div>
       </div>
+      <Pagination
+        class="page"
+        v-model="pagination"
+        @change="currentChange"
+        :small="true"
+        layout="pager"
+      ></Pagination>
     </div>
+
     <Loading :loading="loading"></Loading>
   </div>
 </template>
@@ -52,6 +60,11 @@ export default {
     return {
       danhSachPhongThi: {},
       loading: false,
+      pagination: {
+        page: 1,
+        size: 10,
+        total: 0,
+      },
     };
   },
   computed: {
@@ -80,6 +93,13 @@ export default {
           this.danhSachPhongThi = response.data;
           this.loading = false;
         });
+      } else if (role == "Trường") {
+        await http.get("/school/phong-thi/").then((response) => {
+          console.log(response.data.results.length);
+          this.danhSachPhongThi = response.data;
+          this.pagination.total = response.data.results.length;
+          this.loading = false;
+        });
       }
     },
   },
@@ -104,5 +124,12 @@ export default {
   display: inline;
   font-size: 14px;
   background: none;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2rem;
 }
 </style>

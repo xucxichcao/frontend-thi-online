@@ -25,6 +25,11 @@
       <div class="thi">
         <div class="button">
           <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }} phút</p>
+          <Button
+            v-if="this.role == 'Giảng viên' || this.role == 'Trường'"
+            @click="xemDiem()"
+            >Xem điểm</Button
+          >
           <Button v-if="this.role == 'Giảng viên'" @click="vaoThi()"
             >Xem chi tiết đề thi</Button
           >
@@ -115,6 +120,32 @@ export default {
           store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
           this.loading = false;
         });
+      } else if (newRole == "Trường") {
+        await http.get("/school/phong-thi/" + this.id).then((response) => {
+          this.phongThi = response.data;
+          store.dispatch("attempt/setTenPhongThi", response.data.tenPhongThi);
+          this.loading = false;
+        });
+      }
+    },
+    async xemDiem() {
+      this.loading = true;
+      if (this.role == "Giảng viên") {
+        await http
+          .get(`/gv/diem-thi/`, { params: { idPhongThi: this.id } })
+          .then((response) => {
+            store.dispatch("attempt/setDiem", response.data);
+            this.loading = false;
+            this.$router.push(`/exam/${this.id}/point`);
+          });
+      } else if (this.role == "Trường") {
+        await http
+          .get(`/school/diem-thi/`, { params: { idPhongThi: this.id } })
+          .then((response) => {
+            store.dispatch("attempt/setDiem", response.data);
+            this.loading = false;
+            this.$router.push(`/exam/${this.id}/point`);
+          });
       }
     },
   },

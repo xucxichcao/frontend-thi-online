@@ -106,6 +106,18 @@ const routes = [
                   import("../components/exam/examDetail/allQuestion.vue"),
               },
               {
+                path: "/exam/:examId/point",
+                name: "Point exam",
+                props: true,
+                meta: {
+                  requireAuth: true,
+                  breadcrumb: "Điểm sinh viên",
+                  sideBar: "Exam list",
+                },
+                component: () =>
+                  import("../components/exam/examDetail/point.vue"),
+              },
+              {
                 path: "/exam/:examId/finish",
                 name: "Finish exam",
                 props: true,
