@@ -23,9 +23,11 @@
                     v-for="answer in question[current].luachon"
                     :key="answer.id"
                   >
-                    <Radio v-model="userChoice[current]" :value="answer.id">{{
-                      answer.noidung
-                    }}</Radio>
+                    <Radio
+                      v-model="userChoice[current].luachon"
+                      :value="answer.id"
+                      >{{ answer.noidung }}</Radio
+                    >
                   </FormItem>
                   <Row :space="40">
                     <Cell style="text-align: right" width="12">
@@ -59,7 +61,7 @@
                   >{{ instance.num + 1 }}</Button
                 >
                 <div style="padding-top: 20px">
-                  <p class="finish">Finish attempt ...</p>
+                  <Button text @click="finish()">Finish attempt ...</Button>
                 </div>
               </div>
             </div>
@@ -71,6 +73,7 @@
 </template>
 
 <script>
+import http from "../../../http-common";
 export default {
   data() {
     return {
@@ -81,18 +84,25 @@ export default {
     };
   },
   mounted() {
-    this.question.forEach(() => {
-      this.userChoice.push(undefined);
-    });
     var ctdt = this.$store.getters["attempt/getCTDT"];
     var qA = [];
     // console.log(this.$store.getters["attempt/getCTDT"]);
     for (let i = 0; i < ctdt.length; i++) {
       qA.push(JSON.parse(ctdt[i].noiDung));
       qA[i].num = i;
+      qA[i].questionID = ctdt[i].questionID;
     }
     this.question = qA;
     this.questAmt = qA.length;
+    this.question.forEach((e) => {
+      this.userChoice.push({ questionID: e.questionID, luachon: undefined });
+    });
+  },
+  methods: {
+    finish() {
+      alert("finish");
+      http.post("nopbai", this.userChoice);
+    },
   },
 };
 </script>

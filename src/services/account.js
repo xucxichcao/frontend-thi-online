@@ -5,6 +5,7 @@ import { setAxiosAuthToken } from "../helpers/auth-header";
 export const userService = {
   login,
   logout,
+  register,
 };
 
 function login(email, password, router) {
@@ -70,8 +71,28 @@ function unsetCurrentUser() {
 }
 
 function logout(router) {
-  http.post("/auth/logout/").then(() => {
+  return http.post("/auth/logout/").then(() => {
     unsetCurrentUser();
     router.push({ name: "Signin" });
+  });
+}
+
+async function register(user) {
+  const userData = {
+    email: user.email,
+    password1: user.password,
+    password2: user.repassword,
+  };
+  const truongProfile = {
+    school_name: user.name,
+    phone: user.phone,
+  };
+  var authToken = "";
+  await http.post("/auth/registration/", userData).then((response) => {
+    authToken = response.data["key"];
+  });
+  authToken = "Token " + authToken;
+  return await http.post("/profile/create/", truongProfile, {
+    headers: { Authorization: authToken },
   });
 }
