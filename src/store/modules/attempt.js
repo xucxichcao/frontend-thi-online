@@ -1,6 +1,7 @@
 const state = {
   ctdt: {},
   tenPhongThi: "",
+  diem: {},
 };
 const getters = {
   getCTDT(state) {
@@ -8,6 +9,9 @@ const getters = {
   },
   getTenPhongThi(state) {
     return state.tenPhongThi;
+  },
+  getDiem(state) {
+    return state.diem;
   },
 };
 
@@ -18,6 +22,9 @@ const actions = {
   setTenPhongThi(context, payload) {
     context.commit("SET_TEN_PHONG_THI", payload);
   },
+  setDiem(context, payload) {
+    context.commit("SET_DIEM", payload);
+  },
 };
 
 const mutations = {
@@ -26,6 +33,9 @@ const mutations = {
   },
   SET_TEN_PHONG_THI(state, value) {
     state.tenPhongThi = value;
+  },
+  SET_DIEM(state, value) {
+    state.diem = value;
   },
 };
 
