@@ -13,7 +13,6 @@
               :toggleOnSelect="toggleOnSelect"
               v-model="value"
               @select="select"
-              @choose="choose"
             ></Tree>
           </div>
         </Cell>
@@ -41,7 +40,7 @@
                       <a class="text" href="#">{{ phongThi.giangVien }}</a>
                     </p>
                     <p>Sĩ số: {{ phongThi.siSo }}</p>
-                    <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }}</p>
+                    <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }} phút</p>
                   </Cell>
                   <Cell width="12">
                     <p>Thời gian thi: {{ phongThi.thoiGianThi }}</p>
@@ -59,28 +58,9 @@
 </template>
 
 <script>
+import http from "../../http-common";
 export default {
   data() {
-    let list = [
-      {
-        id: "0",
-        title: "2020-2021",
-        children: [
-          {
-            id: "1",
-            title: "Học kỳ 1",
-          },
-          {
-            id: "2",
-            title: "Học kỳ 2",
-          },
-          {
-            id: "3",
-            title: "Học kỳ 3",
-          },
-        ],
-      },
-    ];
     return {
       toggleOnSelect: true,
       value: [],
@@ -89,39 +69,69 @@ export default {
         parentName: "parent",
         titleName: "title",
         dataMode: "list",
-        datas: list,
+        getDatas: async (parent, resolve) => {
+          var res = [];
+
+          if (!parent) {
+            await http
+              .get("sv/phong-thi/", { params: { tree: true } })
+              .then((data) => {
+                var listPhongThi = data.data.results;
+                listPhongThi.forEach((element) => {
+                  res.push({
+                    id: this.id,
+                    title: element.namHoc,
+                    first: true,
+                  });
+                  this.id++;
+                });
+              });
+            res.sort(function (a, b) {
+              return a.title.localeCompare(b.title);
+            });
+            resolve(res);
+          } else {
+            await http
+              .get("sv/phong-thi/", { params: { namHoc: parent.title } })
+              .then((a) => {
+                var listHocKi = a.data.results;
+                listHocKi.forEach((element) => {
+                  var strHK = "Học kì " + element.hocKi;
+                  res.push({
+                    id: this.id,
+                    title: strHK,
+                    last: true,
+                    hocKi: element.hocKi,
+                    parent: parent.id.toString(),
+                  });
+                  this.id++;
+                });
+              });
+            res.sort(function (a, b) {
+              return a.title.localeCompare(b.title);
+            });
+            resolve(res);
+          }
+        },
       },
-      danhSachPhongThi: [
-        {
-          id: "0",
-          tenPhongThi: "IT003 - Cấu trúc dữ liệu và giải thuật",
-          siSo: "40",
-          giangVien: "Huỳnh Mạnh Hùng",
-          thoiGianLamBai: "60 phút",
-          thoiGianThi: "11/02/2021 - 10:30 am",
-          namHoc: "2021-2022",
-          hocKy: "Học kỳ 2",
-        },
-        {
-          id: "1",
-          tenPhongThi:
-            "Thương mại Điện tử và Triển khai ứng dụng - NT210.M11.MMCL",
-          siSo: "35",
-          giangVien: "Huỳnh Hùng",
-          thoiGianLamBai: "45 phút",
-          thoiGianThi: "11/02/2021 - 7:30 am",
-          namHoc: "2021-2022",
-          hocKy: "Học kỳ 2",
-        },
-      ],
+      danhSachPhongThi: [],
+      selectedNamHoc: "",
+      id: 0,
     };
   },
   methods: {
-    choose(data) {
-      console.log(data);
-    },
-    select(data) {
-      console.log(data);
+    async select(data) {
+      if (data.last === true) {
+        await http
+          .get("sv/phong-thi/", {
+            params: { hocKi: data.hocKi, namHoc: this.selectedNamHoc },
+          })
+          .then((a) => {
+            this.danhSachPhongThi = a.data.results;
+          });
+      } else if (data.first === true) {
+        this.selectedNamHoc = data.title;
+      }
     },
   },
 };

@@ -11,9 +11,9 @@
               <FormItem :showLabel="false">
                 <div class="formField">
                   <span class="fieldLabel">Tên bài thi</span>
-                  <input type="text" v-model="phongThi.ten" />
+                  <input type="text" v-model="phongThi.tenPhongThi" />
                   <div class="message">
-                    {{ validation.firstError("phongThi.ten") }}
+                    {{ validation.firstError("phongThi.tenPhongThi") }}
                   </div>
                 </div>
               </FormItem>
@@ -32,13 +32,21 @@
               <FormItem :showLabel="false" class="h-form-item-editted-1">
                 <div class="formField">
                   <span class="fieldLabel">File .csv đề bài</span>
-                  <input type="file" accept=".csv" />
+                  <input
+                    type="file"
+                    accept=".csv"
+                    @change="handleUploadDeThi"
+                  />
                 </div>
               </FormItem>
               <FormItem :showLabel="false" class="h-form-item-editted-2">
                 <div class="formField">
                   <span class="fieldLabel">File .csv danh sách</span>
-                  <input type="file" accept=".csv" />
+                  <input
+                    type="file"
+                    accept=".csv"
+                    @change="handleUploadDanhSach"
+                  />
                 </div>
               </FormItem>
               <FormItem :showLabel="false" class="h-form-item-editted-1">
@@ -122,7 +130,13 @@
               </FormItem>
               <FormItem :showLabel="false">
                 <center>
-                  <Button @click="next" size="l" color="primary">Tạo</Button>
+                  <Button
+                    @click="send"
+                    size="l"
+                    color="primary"
+                    :disabled="!this.validation.hasError"
+                    >Tạo</Button
+                  >
                 </center>
               </FormItem>
             </Form>
@@ -137,6 +151,7 @@
 import Vue from "vue";
 import SimpleVueValidation from "simple-vue-validator";
 const Validator = SimpleVueValidation.Validator;
+import http from "../../http-common";
 
 SimpleVueValidation.extendTemplates({
   required: "Không được để trống",
@@ -226,18 +241,62 @@ export default {
         { title: "Tự luận", key: "2" },
         { title: "Trắc nghiệm và tự luận", key: "3" },
       ],
+      caigido: undefined,
     };
   },
   methods: {
-    next() {
-      this.submitted = true;
-      this.$validate().then(function (success) {
+    async send() {
+      var flag = true;
+      this.$validate().then(async function (success) {
         if (success) {
-          alert("Validation succeeded!");
+          flag = true;
         } else {
-          alert("Validation failed!");
+          flag = false;
+
+          this.$Notice({
+            type: "error",
+            title: "Thất bại",
+            content: "Dữ liệu đầu vào không hợp lệ",
+          });
         }
       });
+      if (flag == true) {
+        var formDataPhongThi = new FormData();
+        for (const [key, value] of Object.entries(this.phongThi)) {
+          formDataPhongThi.append(key, value);
+        }
+        await http
+          .post("/gv/phong-thi/", formDataPhongThi, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(async () => {
+            var formDataDeThi = new FormData();
+            for (const [key, value] of Object.entries(this.deThi)) {
+              formDataDeThi.append(key, value);
+            }
+            await http
+              .post("/gv/de-thi/", formDataDeThi, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              })
+              .then(() => {
+                this.$Notice({
+                  type: "success",
+                  title: "Thành công",
+                  content: "Thêm phòng thi thành công",
+                });
+              });
+          });
+      }
+    },
+    handleUploadDeThi(e) {
+      this.deThi.file = e.target.files[0] || e.dataTransfer.files[0];
+    },
+    handleUploadDanhSach(e) {
+      this.phongThi.danhSach = e.target.files[0] || e.dataTransfer.files[0];
     },
   },
   validators: {
@@ -261,14 +320,8 @@ export default {
     "phongThi.siSo"(value) {
       return Validator.value(value).required().integer("Không được nhập chữ");
     },
-    "phongThi.danhSach"(value) {
-      return Validator.value(value).required();
-    },
     "deThi.soLuongCauHoi"(value) {
       return Validator.value(value).required().integer("Không được nhập chữ");
-    },
-    "deThi.file"(value) {
-      return Validator.value(value).required();
     },
   },
 };

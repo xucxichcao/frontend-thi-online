@@ -30,18 +30,19 @@ const routes = [
         meta: {
           requireAuth: true,
           name: "Bài thi",
-          breadcrumb: "Bài thi",
+          breadcrumb: "Phòng thi",
         },
         component: () => import("../components/exam/core.vue"),
         children: [
           {
-            path: "",
+            path: "/exam",
             name: "Exam list",
             props: true,
             meta: {
               requireAuth: true,
               name: "Bài thi",
               sideBar: "Exam list",
+              breadcrumb: "Danh sách phòng thi",
             },
             component: () => import("../components/exam/examList.vue"),
           },
@@ -99,6 +100,7 @@ const routes = [
                 props: true,
                 meta: {
                   requireAuth: true,
+                  requireRole: "Giảng viên",
                   breadcrumb: "Tất cả câu hỏi",
                   sideBar: "Exam list",
                 },
@@ -112,6 +114,7 @@ const routes = [
                 meta: {
                   requireAuth: true,
                   name: "Hoàn thành bài thi",
+                  breadcrumb: "Hoàn thành bài thi",
                   sideBar: "Exam list",
                 },
                 component: () =>
@@ -123,7 +126,8 @@ const routes = [
                 meta: {
                   requireAuth: true,
                   name: "Monitor exam",
-                  requireTeacher: true,
+                  requireRole: "Giảng viên",
+                  breadcrumb: "Quản lý giờ thi",
                   sideBar: "Exam list",
                 },
                 component: () => import("../components/camera/core.vue"),
@@ -134,7 +138,9 @@ const routes = [
                     props: true,
                     meta: {
                       requireAuth: true,
+                      requireRole: "Giảng viên",
                       name: "Monitor exam",
+                      breadcrumb: "Quản lý giờ thi",
                       sideBar: "Exam list",
                     },
                     component: () => import("../components/camera/camera.vue"),
@@ -183,7 +189,9 @@ const routes = [
         path: "/school",
         props: true,
         meta: {
+          requireRole: "Trường",
           requireAuth: true,
+          breadcrumb: "Nhà trường",
           name: "Nhà trường",
         },
         component: () => import("../components/school/core.vue"),
@@ -194,7 +202,9 @@ const routes = [
             props: true,
             meta: {
               requireAuth: true,
+              requireRole: "Trường",
               name: "Nhà trường",
+              breadcrumb: "Nhà trường",
               sidebar: "School default",
             },
           },
@@ -204,7 +214,9 @@ const routes = [
             props: true,
             meta: {
               requireAuth: true,
+              requireRole: "Trường",
               name: "Thêm sinh viên",
+              breadcrumb: "Tạo tài khoản",
               sidebar: "School default",
             },
             component: () => import("../components/school/addStudent.vue"),
@@ -249,7 +261,18 @@ router.beforeEach((to, from, next) => {
         name: "Signin",
       });
     } else {
-      next(); // go to wherever I'm going
+      if (to.matched.some((record) => record.meta.requireRole)) {
+        if (
+          to.matched.some(
+            (record) =>
+              record.meta.requireRole === store.getters["account/getRole"]
+          )
+        )
+          next();
+        else {
+          next({ name: "Home core" });
+        }
+      } else next(); // go to wherever I'm going
     }
   } else if (
     to.matched.some((record) => record.name == "Signin") ||

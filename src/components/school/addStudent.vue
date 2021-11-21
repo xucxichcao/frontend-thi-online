@@ -9,9 +9,17 @@
       <div class="h-panel-body">
         <div>
           <div class="upload">
-            <h3>Upload file csv theo mẫu dưới (không thêm header)</h3>
-            <div style="margin-left: 1em">
-              <input type="file" accept=".csv" />
+            <div class="upload-item">
+              <h3>Upload file csv theo mẫu dưới (không thêm header):</h3>
+              <div>
+                <input type="file" accept=".csv" @change="handleFileUpload" />
+              </div>
+            </div>
+            <div class="upload-item">
+              <h3>Chọn loại tài khoản:</h3>
+              <div>
+                <Select v-model="sendData.type" :datas="param"></Select>
+              </div>
             </div>
           </div>
           <div style="margin-top: 2em">
@@ -32,7 +40,9 @@
               </Table>
             </div>
             <div class="button-add">
-              <Button color="primary" icon="h-icon-plus">Thêm sinh viên</Button>
+              <Button color="primary" icon="h-icon-plus" @click="send"
+                >Thêm tài khoản</Button
+              >
             </div>
           </div>
         </div>
@@ -42,6 +52,7 @@
 </template>
 
 <script>
+import http from "../../http-common";
 export default {
   data() {
     return {
@@ -77,9 +88,46 @@ export default {
           sinhNhat: "21-09-2000",
         },
       ],
+      sendData: {
+        csv_file: "",
+        type: "",
+      },
+      param: [
+        { title: "Sinh viên", key: "S" },
+        { title: "Giảng viên", key: "T" },
+      ],
     };
   },
-  methods: {},
+  methods: {
+    handleFileUpload(e) {
+      this.sendData.csv_file = e.target.files[0] || e.dataTransfer.files[0];
+    },
+    send() {
+      let formData = new FormData();
+      formData.append("csv_file", this.sendData.csv_file);
+      formData.append("type", this.sendData.type);
+      return http
+        .post("/school/create-user/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {
+          this.$Notice({
+            type: "success",
+            title: "Thành công",
+            content: "Thêm tài khoản thành công",
+          });
+        })
+        .catch(() => {
+          this.$Notice({
+            type: "error",
+            title: "Thất bại",
+            content: "Dữ liệu vào không phù hợp",
+          });
+        });
+    },
+  },
 };
 </script>
 
@@ -94,5 +142,12 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
+}
+.upload-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 </style>

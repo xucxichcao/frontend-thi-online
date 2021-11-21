@@ -58,6 +58,11 @@
                   v-for="instance in question"
                   :key="instance.num"
                   @click="current = instance.num"
+                  :color="
+                    userChoice[instance.num].luachon == undefined
+                      ? ''
+                      : 'primary'
+                  "
                   >{{ instance.num + 1 }}</Button
                 >
                 <div style="padding-top: 20px">
@@ -101,7 +106,7 @@ export default {
   methods: {
     finish() {
       alert("finish");
-      http.post("nopbai", this.userChoice);
+      http.post("nopbai", [this.userChoice]);
     },
   },
 };
@@ -114,5 +119,8 @@ export default {
 .finish {
   cursor: pointer;
   color: green;
+}
+.choiced {
+  background-color: grey;
 }
 </style>
