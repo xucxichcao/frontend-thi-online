@@ -109,6 +109,10 @@ export default {
             this.dethi = response.data.results[0];
             this.loading = false;
           });
+        var endTime =
+          Date.parse(this.phongThi.thoiGianThi) +
+          this.thoiGianLamBai * 60 * 1000;
+        store.dispatch("attempt/setThoiGianKetThuc", endTime);
       } else if (newRole == "Giảng viên") {
         await http.get("/gv/phong-thi/" + this.id).then((response) => {
           this.phongThi = response.data;

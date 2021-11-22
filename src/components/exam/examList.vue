@@ -45,7 +45,7 @@
                   <Cell width="12">
                     <p>Thời gian thi: {{ phongThi.thoiGianThi }}</p>
                     <p>Năm học: {{ phongThi.namHoc }}</p>
-                    <p>Học kỳ: {{ phongThi.hocKy }}</p>
+                    <p>Học kì: {{ phongThi.hocKi }}</p>
                   </Cell>
                 </Row>
               </div>
@@ -103,6 +103,7 @@ export default {
                     last: true,
                     hocKi: element.hocKi,
                     parent: parent.id.toString(),
+                    namHoc: parent.title,
                   });
                   this.id++;
                 });
@@ -115,7 +116,6 @@ export default {
         },
       },
       danhSachPhongThi: [],
-      selectedNamHoc: "",
       id: 0,
     };
   },
@@ -124,13 +124,11 @@ export default {
       if (data.last === true) {
         await http
           .get("sv/phong-thi/", {
-            params: { hocKi: data.hocKi, namHoc: this.selectedNamHoc },
+            params: { hocKi: data.hocKi, namHoc: data.namHoc },
           })
           .then((a) => {
             this.danhSachPhongThi = a.data.results;
           });
-      } else if (data.first === true) {
-        this.selectedNamHoc = data.title;
       }
     },
   },

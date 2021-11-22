@@ -1,6 +1,7 @@
 const state = {
   ctdt: {},
   tenPhongThi: "",
+  thoiGianKetThuc: 0,
 };
 const getters = {
   getCTDT(state) {
@@ -8,6 +9,9 @@ const getters = {
   },
   getTenPhongThi(state) {
     return state.tenPhongThi;
+  },
+  getThoiGianKetThuc(state) {
+    return state.thoiGianKetThuc;
   },
 };
 
@@ -18,6 +22,9 @@ const actions = {
   setTenPhongThi(context, payload) {
     context.commit("SET_TEN_PHONG_THI", payload);
   },
+  setThoiGianKetThuc(context, payload) {
+    context.commit("SET_THOI_GIAN_KET_THUC", payload);
+  },
 };
 
 const mutations = {
@@ -26,6 +33,9 @@ const mutations = {
   },
   SET_TEN_PHONG_THI(state, value) {
     state.tenPhongThi = value;
+  },
+  SET_THOI_GIAN_KET_THUC(state, value) {
+    state.thoiGianKetThuc = value;
   },
 };
 

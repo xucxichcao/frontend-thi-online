@@ -51,7 +51,23 @@
           <Cell width="6" :xs="0" :sm="0" :md="0">
             <div class="h-panel">
               <div class="h-panel-bar">
-                <span class="h-panel-title">Danh sách câu hỏi</span>
+                <div class="h-panel-title finish-div">
+                  Danh sách câu hỏi
+                  <div class="timer">
+                    <vac
+                      :end-time="$store.getters['attempt/getThoiGianKetThuc']"
+                    >
+                      <template v-slot:process="{ timeObj }">
+                        <span style="color: red; text-align: right">{{
+                          `${timeObj.m}:${timeObj.s}`
+                        }}</span>
+                      </template>
+                      <template v-slot:finish>
+                        <span>Hết giờ</span>
+                      </template>
+                    </vac>
+                  </div>
+                </div>
               </div>
               <div class="h-panel-body">
                 <Button
@@ -78,7 +94,11 @@
 </template>
 
 <script>
+import Vue from "vue";
 import http from "../../../http-common";
+import vueAwesomeCountdown from "vue-awesome-countdown";
+Vue.use(vueAwesomeCountdown, "vac");
+
 export default {
   data() {
     return {
@@ -122,5 +142,14 @@ export default {
 }
 .choiced {
   background-color: grey;
+}
+.timer {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 0;
+}
+.h-panel-title.finish-div {
+  display: flex;
+  flex-direction: row;
 }
 </style>
