@@ -37,7 +37,7 @@
                   <Cell width="12">
                     <p>
                       Giảng viên:
-                      <a class="text" href="#">{{ phongThi.giangVien }}</a>
+                      <a class="text" href="#">{{ phongThi.giangVien_name }}</a>
                     </p>
                     <p>Sĩ số: {{ phongThi.siSo }}</p>
                     <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }} phút</p>
@@ -73,41 +73,109 @@ export default {
           var res = [];
 
           if (!parent) {
-            await http
-              .get("sv/phong-thi/", { params: { tree: true } })
-              .then((data) => {
-                var listPhongThi = data.data.results;
-                listPhongThi.forEach((element) => {
-                  res.push({
-                    id: this.id,
-                    title: element.namHoc,
-                    first: true,
+            if (this.role == "Sinh viên") {
+              await http
+                .get("/sv/phong-thi/", { params: { tree: true } })
+                .then((data) => {
+                  var listPhongThi = data.data.results;
+                  listPhongThi.forEach((element) => {
+                    res.push({
+                      id: this.id,
+                      title: element.namHoc,
+                      first: true,
+                    });
+                    this.id++;
                   });
-                  this.id++;
                 });
-              });
+            } else if (this.role == "Giảng viên") {
+              await http
+                .get("/gv/phong-thi/", { params: { tree: true } })
+                .then((data) => {
+                  var listPhongThi = data.data.results;
+                  listPhongThi.forEach((element) => {
+                    res.push({
+                      id: this.id,
+                      title: element.namHoc,
+                      first: true,
+                    });
+                    this.id++;
+                  });
+                });
+            } else if (this.role == "Trường") {
+              await http
+                .get("/school/phong-thi/", { params: { tree: true } })
+                .then((data) => {
+                  var listPhongThi = data.data.results;
+                  listPhongThi.forEach((element) => {
+                    res.push({
+                      id: this.id,
+                      title: element.namHoc,
+                      first: true,
+                    });
+                    this.id++;
+                  });
+                });
+            }
             res.sort(function (a, b) {
               return a.title.localeCompare(b.title);
             });
             resolve(res);
           } else {
-            await http
-              .get("sv/phong-thi/", { params: { namHoc: parent.title } })
-              .then((a) => {
-                var listHocKi = a.data.results;
-                listHocKi.forEach((element) => {
-                  var strHK = "Học kì " + element.hocKi;
-                  res.push({
-                    id: this.id,
-                    title: strHK,
-                    last: true,
-                    hocKi: element.hocKi,
-                    parent: parent.id.toString(),
-                    namHoc: parent.title,
+            if (this.role == "Sinh viên") {
+              await http
+                .get("sv/phong-thi/", { params: { namHoc: parent.title } })
+                .then((a) => {
+                  var listHocKi = a.data.results;
+                  listHocKi.forEach((element) => {
+                    var strHK = "Học kì " + element.hocKi;
+                    res.push({
+                      id: this.id,
+                      title: strHK,
+                      last: true,
+                      hocKi: element.hocKi,
+                      parent: parent.id.toString(),
+                      namHoc: parent.title,
+                    });
+                    this.id++;
                   });
-                  this.id++;
                 });
-              });
+            } else if (this.role == "Giảng viên") {
+              await http
+                .get("gv/phong-thi/", { params: { namHoc: parent.title } })
+                .then((a) => {
+                  var listHocKi = a.data.results;
+                  listHocKi.forEach((element) => {
+                    var strHK = "Học kì " + element.hocKi;
+                    res.push({
+                      id: this.id,
+                      title: strHK,
+                      last: true,
+                      hocKi: element.hocKi,
+                      parent: parent.id.toString(),
+                      namHoc: parent.title,
+                    });
+                    this.id++;
+                  });
+                });
+            } else if (this.role == "Trường") {
+              await http
+                .get("school/phong-thi/", { params: { namHoc: parent.title } })
+                .then((a) => {
+                  var listHocKi = a.data.results;
+                  listHocKi.forEach((element) => {
+                    var strHK = "Học kì " + element.hocKi;
+                    res.push({
+                      id: this.id,
+                      title: strHK,
+                      last: true,
+                      hocKi: element.hocKi,
+                      parent: parent.id.toString(),
+                      namHoc: parent.title,
+                    });
+                    this.id++;
+                  });
+                });
+            }
             res.sort(function (a, b) {
               return a.title.localeCompare(b.title);
             });
@@ -122,14 +190,37 @@ export default {
   methods: {
     async select(data) {
       if (data.last === true) {
-        await http
-          .get("sv/phong-thi/", {
-            params: { hocKi: data.hocKi, namHoc: data.namHoc },
-          })
-          .then((a) => {
-            this.danhSachPhongThi = a.data.results;
-          });
+        if (this.role == "Sinh viên") {
+          await http
+            .get("sv/phong-thi/", {
+              params: { hocKi: data.hocKi, namHoc: data.namHoc },
+            })
+            .then((a) => {
+              this.danhSachPhongThi = a.data.results;
+            });
+        } else if (this.role == "Giảng viên") {
+          await http
+            .get("gv/phong-thi/", {
+              params: { hocKi: data.hocKi, namHoc: data.namHoc },
+            })
+            .then((a) => {
+              this.danhSachPhongThi = a.data.results;
+            });
+        } else if (this.role == "Trường") {
+          await http
+            .get("school/phong-thi/", {
+              params: { hocKi: data.hocKi, namHoc: data.namHoc },
+            })
+            .then((a) => {
+              this.danhSachPhongThi = a.data.results;
+            });
+        }
       }
+    },
+  },
+  computed: {
+    role() {
+      return this.$store.getters["account/getRole"];
     },
   },
 };

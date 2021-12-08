@@ -54,12 +54,10 @@
                 <div class="h-panel-title finish-div">
                   Danh sách câu hỏi
                   <div class="timer">
-                    <vac
-                      :end-time="$store.getters['attempt/getThoiGianKetThuc']"
-                    >
+                    <vac :end-time="tgkt">
                       <template v-slot:process="{ timeObj }">
                         <span style="color: red; text-align: right">{{
-                          `${timeObj.m}:${timeObj.s}`
+                          `${timeObj.h}:${timeObj.m}:${timeObj.s}`
                         }}</span>
                       </template>
                       <template v-slot:finish>
@@ -106,6 +104,7 @@ export default {
       current: 0,
       userChoice: [],
       question: [],
+      tgkt: new Date(this.$store.getters["attempt/getThoiGianKetThuc"]),
     };
   },
   mounted() {
@@ -125,8 +124,9 @@ export default {
   },
   methods: {
     finish() {
-      alert("finish");
-      http.post("nopbai", [this.userChoice]);
+      const putData = { phongThi: this.$attrs.examId };
+      putData.baiLam = JSON.stringify(this.userChoice);
+      http.put("/sv/lam-bai/", putData);
     },
   },
 };

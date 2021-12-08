@@ -66,6 +66,11 @@ export default {
           key: "Setting default",
           icon: "h-icon-user",
         },
+        {
+          title: "Danh sách phòng thi",
+          key: "Exam list",
+          icon: "h-icon-task",
+        },
       ],
     };
   },
