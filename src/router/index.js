@@ -212,6 +212,7 @@ const routes = [
           },
           {
             path: "/school/add",
+            role: "Trường",
             name: "Add student",
             props: true,
             meta: {
