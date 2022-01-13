@@ -15,9 +15,13 @@
     "core-js": "^3.6.5",
     "hey-validator": "^1.1.0",
     "heyui": "^1.28.0",
+    "jspdf": "^2.5.0",
+    "qiniu": "^7.4.0",
+    "qiniu-js": "^3.4.0",
     "simple-vue-validator": "^0.16.0",
     "vue": "^2.6.11",
     "vue-2-breadcrumbs": "^0.8.0",
+    "vue-awesome-countdown": "^1.1.4",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
   },

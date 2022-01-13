@@ -8,7 +8,8 @@
         <Col width="12">
           <p>Thời gian thi: {{ phongThi.thoiGianThi }}</p>
           <p>
-            Giảng viên: <a class="text" href="#">{{ phongThi.giangVien }}</a>
+            Giảng viên:
+            <a class="text" href="#">{{ phongThi.giangVien_name }}</a>
           </p>
           <p>Học kì: {{ phongThi.hocKi }}</p>
           <p>Năm học: {{ phongThi.namHoc }}</p>
@@ -25,6 +26,12 @@
       <div class="thi">
         <div class="button">
           <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }} phút</p>
+          <Button v-if="this.role == 'Giảng viên'" @click="tuLuan()"
+            >Xem bài thi tự luận</Button
+          >
+          <Button v-if="this.role == 'Giảng viên'" @click="uploadDiem()"
+            >Upload điểm</Button
+          >
           <Button
             v-if="this.role == 'Giảng viên' || this.role == 'Trường'"
             @click="xemDiem()"
@@ -33,7 +40,10 @@
           <Button v-if="this.role == 'Giảng viên'" @click="vaoThi()"
             >Xem chi tiết đề thi</Button
           >
-          <Button v-else-if="this.role == 'Sinh viên'" @click="vaoThi()"
+          <Button
+            v-else-if="this.role == 'Sinh viên'"
+            @click="vaoThi()"
+            :disabled="!this.end"
             >Vào thi</Button
           >
 
@@ -58,6 +68,7 @@ export default {
       loading: false,
       dethi: {},
       key: "",
+      end: 0,
     };
   },
   computed: {
@@ -114,6 +125,12 @@ export default {
             this.dethi = response.data.results[0];
             this.loading = false;
           });
+        var ngayThi = new Date(this.phongThi.thoiGianThi);
+        var endTime = new Date(
+          ngayThi.getTime() + this.phongThi.thoiGianLamBai * 60000
+        );
+        this.end = endTime >= Date.now();
+        store.dispatch("attempt/setThoiGianKetThuc", endTime);
       } else if (newRole == "Giảng viên") {
         await http.get("/gv/phong-thi/" + this.id).then((response) => {
           this.phongThi = response.data;
@@ -147,6 +164,12 @@ export default {
             this.$router.push(`/exam/${this.id}/point`);
           });
       }
+    },
+    async tuLuan() {
+      this.$router.push(`/exam/${this.id}/essay`);
+    },
+    async uploadDiem() {
+      this.$router.push(`/exam/${this.id}/upload`);
     },
   },
 };

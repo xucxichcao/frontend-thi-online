@@ -86,6 +86,7 @@
               <Button color="primary" block @click="submit">Đăng ký</Button>
             </FormItem>
           </Form>
+          <Loading :loading="loading"></Loading>
         </div>
       </div>
     </Cell>
@@ -95,6 +96,7 @@
 <script>
 import Vue from "vue";
 import SimpleVueValidation from "simple-vue-validator";
+import { userService } from "../services/account";
 const Validator = SimpleVueValidation.Validator;
 
 SimpleVueValidation.extendTemplates({
@@ -109,6 +111,7 @@ export default {
     school: { name: "", email: "", phone: "", password: "", repassword: "" },
     isShow1: false,
     isShow0: false,
+    loading: false,
   }),
   validators: {
     "school.name"(value) {
@@ -135,15 +138,36 @@ export default {
     },
   },
   methods: {
-    submit() {
+    async submit() {
       this.submitted = true;
-      this.$validate().then(function (success) {
+      this.loading = true;
+      var flag = false;
+      // this.loading = true;
+      await this.$validate().then(function (success) {
         if (success) {
-          alert("Validation succeeded!");
+          flag = true;
         } else {
-          alert("Validation failed!");
+          flag = false;
         }
       });
+      if (flag === true) {
+        this.loading = false;
+        userService.register(this.school).then(() => {
+          this.$Notice({
+            type: "success",
+            title: "Thành công",
+            content: `Bạn đã đăng ký thành công`,
+          });
+          this.$router.push({ name: "Signin" });
+        });
+      } else {
+        this.loading = false;
+        this.$Notice({
+          type: "error",
+          title: "Thất bại",
+          content: "Thông tin bạn nhập không hợp lệ",
+        });
+      }
     },
   },
 };

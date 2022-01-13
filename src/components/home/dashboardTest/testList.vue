@@ -24,7 +24,7 @@
               <Cell width="12">
                 <p>
                   Giảng viên:
-                  <a class="text" href="#">{{ phongThi.giangVien }}</a>
+                  <a class="text" href="#">{{ phongThi.giangVien_name }}</a>
                 </p>
                 <p>Sĩ số: {{ phongThi.siSo }}</p>
                 <p>Thời gian làm bài: {{ phongThi.thoiGianLamBai }} phút</p>

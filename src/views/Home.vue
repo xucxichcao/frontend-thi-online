@@ -7,7 +7,26 @@
           ref="menu"
           style="margin-top: 20px"
           className="h-menu-dark"
-          :datas="menuDatas"
+          v-if="role == 'Trường'"
+          :datas="menuDatasSchool"
+          :inlineCollapsed="siderCollapsed"
+          @click="trigger"
+        ></Menu>
+        <Menu
+          ref="menu"
+          style="margin-top: 20px"
+          className="h-menu-dark"
+          v-if="role == 'Sinh viên'"
+          :datas="menuDatasStudent"
+          :inlineCollapsed="siderCollapsed"
+          @click="trigger"
+        ></Menu>
+        <Menu
+          ref="menu"
+          style="margin-top: 20px"
+          className="h-menu-dark"
+          v-if="role == 'Giảng viên'"
+          :datas="menuDatasTeacher"
           :inlineCollapsed="siderCollapsed"
           @click="trigger"
         ></Menu>
@@ -44,6 +63,7 @@
         </HFooter>
       </Layout>
     </Layout>
+    <Loading :loading="loading"></Loading>
   </div>
 </template>
 
@@ -54,8 +74,9 @@ export default {
   data() {
     return {
       year: new Date().getFullYear(),
+      loading: true,
       siderCollapsed: true,
-      menuDatas: [
+      menuDatasStudent: [
         {
           title: "Trang chủ",
           key: "Home core",
@@ -66,14 +87,71 @@ export default {
           key: "Setting default",
           icon: "h-icon-user",
         },
+        {
+          title: "Danh sách phòng thi",
+          key: "Exam list",
+          icon: "h-icon-task",
+        },
+      ],
+      menuDatasTeacher: [
+        {
+          title: "Trang chủ",
+          key: "Home core",
+          icon: "h-icon-home",
+        },
+        {
+          title: "Tài khoản",
+          key: "Setting default",
+          icon: "h-icon-user",
+        },
+        {
+          title: "Danh sách phòng thi",
+          key: "Exam list",
+          icon: "h-icon-task",
+        },
+        {
+          title: "Tạo đề thi",
+          key: "Create exam",
+          icon: "h-icon-plus",
+        },
+      ],
+      menuDatasSchool: [
+        {
+          title: "Trang chủ",
+          key: "Home core",
+          icon: "h-icon-home",
+        },
+        {
+          title: "Tài khoản",
+          key: "Setting default",
+          icon: "h-icon-user",
+        },
+        {
+          title: "Danh sách phòng thi",
+          key: "Exam list",
+          icon: "h-icon-task",
+        },
+        {
+          title: "Tạo tài khoản",
+          key: "Add student",
+          icon: "h-icon-plus",
+        },
       ],
     };
+  },
+  computed: {
+    role() {
+      return this.$store.getters["account/getRole"];
+    },
   },
   watch: {
     $route() {
       if (this.$route.name) {
         this.$refs.menu.select(this.$route.meta.sideBar);
       }
+    },
+    role() {
+      this.loadData(this.role);
     },
   },
   methods: {
@@ -84,8 +162,15 @@ export default {
     signOut() {
       userService.logout(this.$router);
     },
+    async loadData(role) {
+      if (role) {
+        this.loading = false;
+      }
+    },
   },
-  mounted() {
+  async mounted() {
+    this.loading = true;
+    await this.loadData(this.role);
     if (this.$route.matched) {
       this.$refs.menu.select(this.$route.meta.sideBar);
     }

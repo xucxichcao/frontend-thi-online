@@ -23,9 +23,11 @@
                     v-for="answer in question[current].luachon"
                     :key="answer.id"
                   >
-                    <Radio v-model="userChoice[current]" :value="answer.id">{{
-                      answer.noidung
-                    }}</Radio>
+                    <Radio
+                      v-model="userChoice[current].luachon"
+                      :value="answer.id"
+                      >{{ answer.noidung }}</Radio
+                    >
                   </FormItem>
                   <Row :space="40">
                     <Cell style="text-align: right" width="12">
@@ -49,17 +51,36 @@
           <Cell width="6" :xs="0" :sm="0" :md="0">
             <div class="h-panel">
               <div class="h-panel-bar">
-                <span class="h-panel-title">Danh sách câu hỏi</span>
+                <div class="h-panel-title finish-div">
+                  Danh sách câu hỏi
+                  <div class="timer">
+                    <vac :end-time="tgkt">
+                      <template v-slot:process="{ timeObj }">
+                        <span style="color: red; text-align: right">{{
+                          `${timeObj.h}:${timeObj.m}:${timeObj.s}`
+                        }}</span>
+                      </template>
+                      <template v-slot:finish>
+                        <span>Hết giờ</span>
+                      </template>
+                    </vac>
+                  </div>
+                </div>
               </div>
               <div class="h-panel-body">
                 <Button
                   v-for="instance in question"
                   :key="instance.num"
                   @click="current = instance.num"
+                  :color="
+                    userChoice[instance.num].luachon == undefined
+                      ? ''
+                      : 'primary'
+                  "
                   >{{ instance.num + 1 }}</Button
                 >
                 <div style="padding-top: 20px">
-                  <p class="finish">Finish attempt ...</p>
+                  <Button text @click="finish()">Finish attempt ...</Button>
                 </div>
               </div>
             </div>
@@ -67,10 +88,30 @@
         </Row>
       </div>
     </div>
+
+    <div class="h-panel" style="margin-top: 1em">
+      <div class="h-panel-body">
+        <div>
+          <h1>Đề thi tự luận</h1>
+          <span>Nộp bài dưới dạng (.pdf)</span>
+        </div>
+        <div class="h-panel">
+          <div class="h-panel-body upload">
+            <i class="h-icon-upload blue-color" v-font="30"></i>
+            <input type="file" @change="handleChange" accept=".pdf" />
+            <a v-if="fileTuLuan">{{ fileTuLuan.name }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import http from "../../../http-common";
+import vueAwesomeCountdown from "vue-awesome-countdown";
+Vue.use(vueAwesomeCountdown, "vac");
 export default {
   data() {
     return {
@@ -78,21 +119,35 @@ export default {
       current: 0,
       userChoice: [],
       question: [],
+      tgkt: new Date(this.$store.getters["attempt/getThoiGianKetThuc"]),
+      fileTuLuan: undefined,
     };
   },
   mounted() {
-    this.question.forEach(() => {
-      this.userChoice.push(undefined);
-    });
     var ctdt = this.$store.getters["attempt/getCTDT"];
     var qA = [];
     // console.log(this.$store.getters["attempt/getCTDT"]);
     for (let i = 0; i < ctdt.length; i++) {
       qA.push(JSON.parse(ctdt[i].noiDung));
       qA[i].num = i;
+      qA[i].questionID = ctdt[i].questionID;
     }
     this.question = qA;
     this.questAmt = qA.length;
+    this.question.forEach((e) => {
+      this.userChoice.push({ questionID: e.questionID, luachon: undefined });
+    });
+  },
+  methods: {
+    finish() {
+      const putData = { phongThi: this.$attrs.examId };
+      putData.baiLam = JSON.stringify(this.userChoice);
+      http.put("/sv/lam-bai/", putData);
+    },
+    handleChange(e) {
+      this.fileTuLuan = e.target.files[0] || e.dataTransfer.files[0];
+      console.log(this.fileTuLuan);
+    },
   },
 };
 </script>
@@ -104,5 +159,42 @@ export default {
 .finish {
   cursor: pointer;
   color: green;
+}
+.choiced {
+  background-color: grey;
+}
+.timer {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 0;
+}
+.h-panel-title.finish-div {
+  display: flex;
+  flex-direction: row;
+}
+.buttonTuLuan {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgb(0, 140, 255);
+}
+.buttonTuLuan:hover {
+  text-decoration: underline;
+}
+
+.upload-pa {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  width: 100%;
+}
+
+.upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+  padding: 1em;
 }
 </style>
