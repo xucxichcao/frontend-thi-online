@@ -7,7 +7,7 @@
             <span class="h-panel-title"><h2>Tạo đề thi</h2></span>
           </div>
           <div class="h-panel-body">
-            <Form mode="twocolumn">
+            <Form mode="threecolumn">
               <FormItem :showLabel="false">
                 <div class="formField">
                   <span class="fieldLabel">Tên bài thi</span>
@@ -29,19 +29,44 @@
                   </div>
                 </div>
               </FormItem>
-              <FormItem :showLabel="false" class="h-form-item-editted-1">
+              <FormItem :showLabel="false">
                 <div class="formField">
-                  <span class="fieldLabel">File .csv đề bài</span>
+                  <span class="fieldLabel">Kiểu bài thi</span>
+                  <Select
+                    v-model="deThi.kieuThi"
+                    :datas="selectKieuThi"
+                  ></Select>
+                </div>
+              </FormItem>
+            </Form>
+            <Form mode="twocolumn">
+              <FormItem
+                :showLabel="false"
+                :class="deThi.kieuThi === 'True' ? 'h-form-item-editted-1' : ''"
+              >
+                <div class="formField">
+                  <span v-if="deThi.kieuThi === 'True'" class="fieldLabel"
+                    >File .csv đề bài</span
+                  >
+                  <span v-else class="fieldLabel">File .pdf đề bài</span>
                   <input
                     type="file"
+                    v-if="deThi.kieuThi == 'True'"
                     accept=".csv"
                     @change="handleUploadDeThi"
                   />
-                  <span>File đề tự luận</span>
-                  <input type="file" @change="handleUploadDeThiTuLuan" />
+                  <input
+                    type="file"
+                    v-else
+                    accept=".pdf"
+                    @change="handleUploadDeThi"
+                  />
                 </div>
               </FormItem>
-              <FormItem :showLabel="false" class="h-form-item-editted-2">
+              <FormItem
+                :showLabel="false"
+                :class="deThi.kieuThi === 'True' ? 'h-form-item-editted-2' : ''"
+              >
                 <div class="formField">
                   <span class="fieldLabel">File .csv danh sách</span>
                   <input
@@ -51,9 +76,13 @@
                   />
                 </div>
               </FormItem>
-              <FormItem :showLabel="false" class="h-form-item-editted-1">
+              <FormItem
+                v-if="deThi.kieuThi === 'True'"
+                :showLabel="false"
+                class="h-form-item-editted-1"
+              >
                 <div class="formField">
-                  <span class="fieldLabel">Ví dụ (không cần header)</span>
+                  <span class="fieldLabel">Ví dụ (không có header)</span>
                   <Table :datas="deThiData" stripe>
                     <TableItem title="Số đáp án" prop="soDapAn"></TableItem>
                     <TableItem title="Đề" prop="de"></TableItem>
@@ -65,9 +94,18 @@
                   </Table>
                 </div>
               </FormItem>
-              <FormItem :showLabel="false" class="h-form-item-editted-2">
+              <FormItem
+                :showLabel="false"
+                :class="
+                  deThi.kieuThi === 'True'
+                    ? 'h-form-item-editted-2'
+                    : 'h-form-item-editted-3'
+                "
+              >
                 <div class="formField">
-                  <span class="fieldLabel">Ví dụ (không cần header)</span>
+                  <span class="fieldLabel"
+                    >Ví dụ file danh sách (không có header)</span
+                  >
                   <Table :datas="danhSachData" stripe>
                     <TableItem title="Email" prop="email"></TableItem>
                   </Table>
@@ -164,7 +202,6 @@ Vue.use(SimpleVueValidation);
 export default {
   data: function () {
     return {
-      file: "",
       phongThi: {
         tenPhongThi: undefined,
         hocKi: undefined,
@@ -177,7 +214,7 @@ export default {
       deThi: {
         soLuongCauHoi: undefined,
         file: undefined,
-        fileTuLuan: undefined,
+        kieuThi: "True",
       },
       deThiData: [
         {
@@ -221,6 +258,10 @@ export default {
       ],
       select: null,
       type: "datetime",
+      selectKieuThi: [
+        { title: "Trắc nghiệm", key: "True" },
+        { title: "Tự luận", key: "False" },
+      ],
       dateTimePickerOption: {
         start() {
           var today = new Date().toISOString().slice(0, 10);
@@ -240,12 +281,6 @@ export default {
         { title: "Học kì 2", key: "2" },
         { title: "Học kì hè", key: "3" },
       ],
-      hinhThuc: [
-        { title: "Trắc nghiệm", key: "1" },
-        { title: "Tự luận", key: "2" },
-        { title: "Trắc nghiệm và tự luận", key: "3" },
-      ],
-      caigido: undefined,
     };
   },
   methods: {
@@ -302,9 +337,6 @@ export default {
     handleUploadDanhSach(e) {
       this.phongThi.danhSach = e.target.files[0] || e.dataTransfer.files[0];
     },
-    handleUploadDeThiTuLuan(e) {
-      this.deThi.fileTuLuan = e.target.files[0] || e.dataTransfer.files[0];
-    },
   },
   validators: {
     "phongThi.tenPhongThi"(value) {
@@ -346,6 +378,9 @@ export default {
 .h-form.h-form-twocolumn .h-form-item {
   padding: 0 10px 10px 10px;
 }
+.h-form.h-form-threecolumn .h-form-item {
+  padding: 0 10px 10px 10px;
+}
 .secondary-panel.h-form > .h-form-item:last-of-type {
   padding-top: 30px;
 }
@@ -357,5 +392,8 @@ export default {
 }
 .h-form-item-editted-2 {
   width: 25% !important;
+}
+.h-form-item-editted-3 {
+  width: 100% !important;
 }
 </style>
