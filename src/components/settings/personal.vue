@@ -29,7 +29,18 @@
               <FormItem :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Trường</span>
-                  <input type="text" readonly v-model="data.school" />
+                  <input
+                    v-if="data.school"
+                    type="text"
+                    readonly
+                    v-model="data.school"
+                  />
+                  <input
+                    v-else
+                    type="text"
+                    readonly
+                    v-model="data.school_name"
+                  />
                 </div>
               </FormItem>
               <FormItem :showLabel="false">

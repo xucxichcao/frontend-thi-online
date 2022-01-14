@@ -88,6 +88,22 @@
         </Row>
       </div>
     </div>
+
+    <div class="h-panel" style="margin-top: 1em">
+      <div class="h-panel-body">
+        <div>
+          <h1>Đề thi tự luận</h1>
+          <span>Nộp bài dưới dạng (.pdf)</span>
+        </div>
+        <div class="h-panel">
+          <div class="h-panel-body upload">
+            <i class="h-icon-upload blue-color" v-font="30"></i>
+            <input type="file" @change="handleChange" accept=".pdf" />
+            <a v-if="fileTuLuan">{{ fileTuLuan.name }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,7 +112,6 @@ import Vue from "vue";
 import http from "../../../http-common";
 import vueAwesomeCountdown from "vue-awesome-countdown";
 Vue.use(vueAwesomeCountdown, "vac");
-
 export default {
   data() {
     return {
@@ -105,6 +120,7 @@ export default {
       userChoice: [],
       question: [],
       tgkt: new Date(this.$store.getters["attempt/getThoiGianKetThuc"]),
+      fileTuLuan: undefined,
     };
   },
   mounted() {
@@ -127,6 +143,10 @@ export default {
       const putData = { phongThi: this.$attrs.examId };
       putData.baiLam = JSON.stringify(this.userChoice);
       http.put("/sv/lam-bai/", putData);
+    },
+    handleChange(e) {
+      this.fileTuLuan = e.target.files[0] || e.dataTransfer.files[0];
+      console.log(this.fileTuLuan);
     },
   },
 };
@@ -151,5 +171,30 @@ export default {
 .h-panel-title.finish-div {
   display: flex;
   flex-direction: row;
+}
+.buttonTuLuan {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgb(0, 140, 255);
+}
+.buttonTuLuan:hover {
+  text-decoration: underline;
+}
+
+.upload-pa {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  width: 100%;
+}
+
+.upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+  padding: 1em;
 }
 </style>

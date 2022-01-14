@@ -37,6 +37,8 @@
                     accept=".csv"
                     @change="handleUploadDeThi"
                   />
+                  <span>File đề tự luận</span>
+                  <input type="file" @change="handleUploadDeThiTuLuan" />
                 </div>
               </FormItem>
               <FormItem :showLabel="false" class="h-form-item-editted-2">
@@ -162,6 +164,7 @@ Vue.use(SimpleVueValidation);
 export default {
   data: function () {
     return {
+      file: "",
       phongThi: {
         tenPhongThi: undefined,
         hocKi: undefined,
@@ -174,6 +177,7 @@ export default {
       deThi: {
         soLuongCauHoi: undefined,
         file: undefined,
+        fileTuLuan: undefined,
       },
       deThiData: [
         {
@@ -297,6 +301,9 @@ export default {
     },
     handleUploadDanhSach(e) {
       this.phongThi.danhSach = e.target.files[0] || e.dataTransfer.files[0];
+    },
+    handleUploadDeThiTuLuan(e) {
+      this.deThi.fileTuLuan = e.target.files[0] || e.dataTransfer.files[0];
     },
   },
   validators: {

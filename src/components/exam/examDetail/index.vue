@@ -26,6 +26,12 @@
       <div class="thi">
         <div class="button">
           <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }} phút</p>
+          <Button v-if="this.role == 'Giảng viên'" @click="tuLuan()"
+            >Xem bài thi tự luận</Button
+          >
+          <Button v-if="this.role == 'Giảng viên'" @click="uploadDiem()"
+            >Upload điểm</Button
+          >
           <Button
             v-if="this.role == 'Giảng viên' || this.role == 'Trường'"
             @click="xemDiem()"
@@ -158,6 +164,12 @@ export default {
             this.$router.push(`/exam/${this.id}/point`);
           });
       }
+    },
+    async tuLuan() {
+      this.$router.push(`/exam/${this.id}/essay`);
+    },
+    async uploadDiem() {
+      this.$router.push(`/exam/${this.id}/upload`);
     },
   },
 };

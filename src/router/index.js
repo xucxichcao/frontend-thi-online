@@ -52,9 +52,10 @@ const routes = [
             props: true,
             meta: {
               requireAuth: true,
-              role: "Giảng viên",
+              requireRole: "Giảng viên",
+              name: "Tạo đề thi",
+              sidebar: "Create exam",
               breadcrumb: "Tạo đề thi",
-              sidebar: "Exam list",
             },
             component: () => import("../components/exam/createExam.vue"),
           },
@@ -118,6 +119,32 @@ const routes = [
                 },
                 component: () =>
                   import("../components/exam/examDetail/point.vue"),
+              },
+              {
+                path: "/exam/:examId/essay",
+                name: "Essay exam",
+                props: true,
+                meta: {
+                  requireAuth: true,
+                  requireRole: "Giảng viên",
+                  breadcrumb: "Bài thi tự luận",
+                  sideBar: "Exam list",
+                },
+                component: () =>
+                  import("../components/exam/examDetail/essay.vue"),
+              },
+              {
+                path: "/exam/:examId/upload",
+                name: "Upload Point",
+                props: true,
+                meta: {
+                  requireAuth: true,
+                  requireRole: "Giảng viên",
+                  breadcrumb: "Upload điểm",
+                  sideBar: "Exam list",
+                },
+                component: () =>
+                  import("../components/exam/examDetail/upload.vue"),
               },
               {
                 path: "/exam/:examId/finish",
