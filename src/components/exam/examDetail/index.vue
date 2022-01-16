@@ -11,14 +11,15 @@
             Giảng viên:
             <a class="text" href="#">{{ phongThi.giangVien_name }}</a>
           </p>
-          <p>Học kì: {{ phongThi.hocKi }}</p>
-          <p>Năm học: {{ phongThi.namHoc }}</p>
-          <p v-if="phongThi.diem">Kết quả: {{ phongThi.diem }}</p></Col
-        >
+          <p>Hình thức thi: {{ deThi.kieuThi ? "Trắc nghiệm" : "Tự luận" }}</p>
+          <p v-if="phongThi.diem">Kết quả: {{ phongThi.diem }}</p>
+        </Col>
         <Col width="12">
           <p v-if="this.role == 'Sinh viên'">
-            Số lượng câu hỏi: {{ dethi.soLuongCauHoi }}
+            Số lượng câu hỏi: {{ deThi.soLuongCauHoi }}
           </p>
+          <p>Học kì: {{ phongThi.hocKi }}</p>
+          <p>Năm học: {{ phongThi.namHoc }}</p>
         </Col>
       </Row>
     </div>
@@ -26,10 +27,14 @@
       <div class="thi">
         <div class="button">
           <p>Thời gian làm bài thi: {{ phongThi.thoiGianLamBai }} phút</p>
-          <Button v-if="this.role == 'Giảng viên'" @click="tuLuan()"
+          <Button
+            v-if="this.role == 'Giảng viên' && !this.phongThi.kieuThi"
+            @click="tuLuan()"
             >Xem bài thi tự luận</Button
           >
-          <Button v-if="this.role == 'Giảng viên'" @click="uploadDiem()"
+          <Button
+            v-if="this.role == 'Giảng viên' && !this.phongThi.kieuThi"
+            @click="uploadDiem()"
             >Upload điểm</Button
           >
           <Button
@@ -37,7 +42,9 @@
             @click="xemDiem()"
             >Xem điểm</Button
           >
-          <Button v-if="this.role == 'Giảng viên'" @click="vaoThi()"
+          <Button
+            v-if="this.role == 'Giảng viên' && this.phongThi.kieuThi"
+            @click="vaoThi()"
             >Xem chi tiết đề thi</Button
           >
           <Button
@@ -66,7 +73,7 @@ export default {
       phongThi: {},
       id: this.$route.params.examId,
       loading: false,
-      dethi: {},
+      deThi: {},
       key: "",
       end: 0,
     };
@@ -92,16 +99,12 @@ export default {
         await http
           .get(`/sv/get-key/`, { params: { idPhongThi: this.id } })
           .then((response) => {
-            this.key = response.data.results[0].key;
-            this.loading = false;
-          });
-        await http
-          .get(`/sv/ctdt/`, { params: { key: this.key } })
-          .then((response) => {
-            store.dispatch("attempt/setCTDT", response.data["results"]);
-            this.loading = false;
+            store.dispatch("attempt/setKey", response.data.results[0].key);
+            store.dispatch("attempt/setKieuThi", this.deThi.kieuThi);
             this.$router.push(`/exam/${this.id}/attempt`);
+            this.loading = false;
           });
+        if (this.deThi.kieuThi) this.$router.push(`/exam/${this.id}/attempt`);
       } else if (this.role == "Giảng viên") {
         await http
           .get(`/gv/ctdt/`, { params: { idPhongThi: this.id } })
@@ -122,7 +125,7 @@ export default {
         await http
           .get(`/sv/get-de-thi/`, { params: { idPhongThi: this.id } })
           .then((response) => {
-            this.dethi = response.data.results[0];
+            this.deThi = response.data.results[0];
             this.loading = false;
           });
         var ngayThi = new Date(this.phongThi.thoiGianThi);
@@ -147,23 +150,7 @@ export default {
     },
     async xemDiem() {
       this.loading = true;
-      if (this.role == "Giảng viên") {
-        await http
-          .get(`/gv/diem-thi/`, { params: { idPhongThi: this.id } })
-          .then((response) => {
-            store.dispatch("attempt/setDiem", response.data);
-            this.loading = false;
-            this.$router.push(`/exam/${this.id}/point`);
-          });
-      } else if (this.role == "Trường") {
-        await http
-          .get(`/school/diem-thi/`, { params: { idPhongThi: this.id } })
-          .then((response) => {
-            store.dispatch("attempt/setDiem", response.data);
-            this.loading = false;
-            this.$router.push(`/exam/${this.id}/point`);
-          });
-      }
+      this.$router.push(`/exam/${this.id}/point`);
     },
     async tuLuan() {
       this.$router.push(`/exam/${this.id}/essay`);

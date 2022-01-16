@@ -3,6 +3,8 @@ const state = {
   tenPhongThi: "",
   thoiGianKetThuc: 0,
   diem: {},
+  key: "",
+  kieuThi: null,
 };
 const getters = {
   getCTDT(state) {
@@ -16,6 +18,12 @@ const getters = {
   },
   getDiem(state) {
     return state.diem;
+  },
+  getKey(state) {
+    return state.key;
+  },
+  getKieuThi(state) {
+    return state.kieuThi;
   },
 };
 
@@ -32,6 +40,12 @@ const actions = {
   setDiem(context, payload) {
     context.commit("SET_DIEM", payload);
   },
+  setKey(context, payload) {
+    context.commit("SET_KEY", payload);
+  },
+  setKieuThi(context, payload) {
+    context.commit("SET_KIEU_THI", payload);
+  },
 };
 
 const mutations = {
@@ -46,6 +60,12 @@ const mutations = {
   },
   SET_DIEM(state, value) {
     state.diem = value;
+  },
+  SET_KEY(state, value) {
+    state.key = value;
+  },
+  SET_KIEU_THI(state, value) {
+    state.kieuThi = value;
   },
 };
 

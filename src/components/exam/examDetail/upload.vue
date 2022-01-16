@@ -15,10 +15,12 @@
         </FormItem>
       </Form>
       <Table :datas="datas" stripe>
-        <TableItem title="Tên sinh viên" prop="name"></TableItem>
+        <TableItem title="Mã số sinh viên" prop="name"></TableItem>
         <TableItem title="Điểm" prop="diem" align="center"></TableItem>
       </Table>
       <div class="send">
+        <Button @click="download">Tải file danh sách</Button>
+
         <Button @click="send" color="primary" :disabled="flag">Upload</Button>
       </div>
     </div>
@@ -26,16 +28,18 @@
 </template>
 
 <script>
+import http from "../../../http-common";
 export default {
   data() {
     return {
       file: undefined,
       flag: true,
       datas: [
-        { name: "Cao Trọng Nghĩa", diem: "10" },
-        { name: "Huỳnh Mạnh Hùng", diem: "10" },
-        { name: "Lê Hải Minh", diem: "10" },
+        { name: "18521138", diem: "10" },
+        { name: "18520795", diem: "10" },
+        { name: "18521103", diem: "10" },
       ],
+      upload: [],
     };
   },
   methods: {
@@ -44,7 +48,40 @@ export default {
       this.flag = false;
     },
     send() {
-      console.log(this.file);
+      var formData = new FormData();
+      formData.append("idPhongThi", this.$attrs.examId);
+      formData.append("file", this.file);
+      http.post("/gv/upload-diem-tu-luan/", formData, {
+        haeders: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+    download() {
+      http
+        .get("/gv/download-file-diem-tu-luan/", {
+          params: { idPhongThi: this.$attrs.examId },
+          responseType: "blob",
+        })
+        .then(function (response) {
+          var filename = "";
+          var disposition = response.headers["content-disposition"];
+          if (disposition && disposition.indexOf("attachment") !== -1) {
+            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            var matches = filenameRegex.exec(disposition);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, "");
+            }
+          }
+          let blob = new Blob([response.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+
+          let link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+          link.click();
+        });
     },
   },
 };

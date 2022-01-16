@@ -2,7 +2,7 @@
   <div>
     <div class="h-panel">
       <div class="h-panel-body">
-        <Row :space="30">
+        <Row v-if="kieuThi" :space="30">
           <Cell width="4" :xs="0" :sm="0" :md="0">
             <div class="h-panel">
               <div class="h-panel-body">
@@ -86,22 +86,31 @@
             </div>
           </Cell>
         </Row>
-      </div>
-    </div>
-
-    <div class="h-panel" style="margin-top: 1em">
-      <div class="h-panel-body">
-        <div>
-          <h1>Đề thi tự luận</h1>
-          <span>Nộp bài dưới dạng (.pdf)</span>
-        </div>
-        <div class="h-panel">
-          <div class="h-panel-body upload">
-            <i class="h-icon-upload blue-color" v-font="30"></i>
-            <input type="file" @change="handleChange" accept=".pdf" />
-            <a v-if="fileTuLuan">{{ fileTuLuan.name }}</a>
-          </div>
-        </div>
+        <Row v-else :space="30">
+          <Cell width="12">
+            <span>Đề thi tự luận trong file: </span>
+            <a :href="deTuLuan">Tải tại đây</a><br /><br />
+            <span>Nộp bài bằng cách nộp file .pdf: </span>
+            <input type="file" @change="handleChange" /><br />
+            <br />
+            <Button primary @click="nopBaiTuLuan">Nộp bài tự luận</Button>
+          </Cell>
+          <Cell class="toRight" width="12">
+            <span>Thời gian còn lại: </span>
+            <div class="timer">
+              <vac :end-time="tgkt">
+                <template v-slot:process="{ timeObj }">
+                  <span style="color: red; text-align: right">{{
+                    `${timeObj.h}:${timeObj.m}:${timeObj.s}`
+                  }}</span>
+                </template>
+                <template v-slot:finish>
+                  <span>Hết giờ</span>
+                </template>
+              </vac>
+            </div>
+          </Cell>
+        </Row>
       </div>
     </div>
   </div>
@@ -112,6 +121,7 @@ import Vue from "vue";
 import http from "../../../http-common";
 import vueAwesomeCountdown from "vue-awesome-countdown";
 Vue.use(vueAwesomeCountdown, "vac");
+import store from "../../../store/index";
 export default {
   data() {
     return {
@@ -120,33 +130,62 @@ export default {
       userChoice: [],
       question: [],
       tgkt: new Date(this.$store.getters["attempt/getThoiGianKetThuc"]),
-      fileTuLuan: undefined,
+      baiLamTuLuan: undefined,
+      kieuThi: store.getters["attempt/getKieuThi"],
+      deTuLuan: "",
     };
   },
-  mounted() {
-    var ctdt = this.$store.getters["attempt/getCTDT"];
-    var qA = [];
-    // console.log(this.$store.getters["attempt/getCTDT"]);
-    for (let i = 0; i < ctdt.length; i++) {
-      qA.push(JSON.parse(ctdt[i].noiDung));
-      qA[i].num = i;
-      qA[i].questionID = ctdt[i].questionID;
+  async mounted() {
+    var ctdt = [];
+    const key = store.getters["attempt/getKey"];
+    if (this.kieuThi)
+      await http
+        .get(`/sv/ctdt/`, { params: { key: key } })
+        .then((response) => {
+          ctdt = response.data["results"];
+          this.loading = false;
+        })
+        .then(() => {
+          var qA = [];
+          // console.log(this.$store.getters["attempt/getCTDT"]);
+          for (let i = 0; i < ctdt.length; i++) {
+            qA.push(JSON.parse(ctdt[i].noiDung));
+            qA[i].num = i;
+            qA[i].questionID = ctdt[i].questionID;
+          }
+          this.question = qA;
+          this.questAmt = qA.length;
+          this.question.forEach((e) => {
+            this.userChoice.push({
+              questionID: e.questionID,
+              luachon: undefined,
+            });
+          });
+        });
+    else {
+      await http
+        .get(`/sv/get-de-tu-luan/`, {
+          params: { idPhongThi: this.$route.params.examId, key: key },
+        })
+        .then((resp) => {
+          this.deTuLuan = resp.data.results[0].file;
+        });
     }
-    this.question = qA;
-    this.questAmt = qA.length;
-    this.question.forEach((e) => {
-      this.userChoice.push({ questionID: e.questionID, luachon: undefined });
-    });
   },
   methods: {
     finish() {
-      const putData = { phongThi: this.$attrs.examId };
+      var putData = { phongThi: this.$attrs.examId };
       putData.baiLam = JSON.stringify(this.userChoice);
       http.put("/sv/lam-bai/", putData);
     },
     handleChange(e) {
-      this.fileTuLuan = e.target.files[0] || e.dataTransfer.files[0];
-      console.log(this.fileTuLuan);
+      this.baiLamTuLuan = e.target.files[0] || e.dataTransfer.files[0];
+    },
+    nopBaiTuLuan() {
+      var form = new FormData();
+      form.append("phongThi", this.$attrs.examId);
+      form.append("baiLamTuLuan", this.baiLamTuLuan);
+      http.put("/sv/lam-bai-tu-luan/", form);
     },
   },
 };
@@ -196,5 +235,8 @@ export default {
   justify-content: center;
   margin-top: 1em;
   padding: 1em;
+}
+.h-col-12.toRight {
+  text-align: right;
 }
 </style>
