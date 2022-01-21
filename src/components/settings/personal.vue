@@ -8,19 +8,19 @@
           </div>
           <div class="h-panel-body">
             <Form mode="threecolumn">
-              <FormItem :showLabel="false">
+              <FormItem v-if="data.school" :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Họ và tên</span>
                   <input type="text" readonly v-model="data.full_name" />
                 </div>
               </FormItem>
-              <FormItem :showLabel="false">
+              <FormItem v-if="data.sex" :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Giới tính</span>
                   <input type="text" readonly v-model="data.sex" />
                 </div>
               </FormItem>
-              <FormItem :showLabel="false">
+              <FormItem v-if="data.cid" :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">CMND/CCCD</span>
                   <input type="text" readonly v-model="data.cid" />
@@ -43,13 +43,13 @@
                   />
                 </div>
               </FormItem>
-              <FormItem :showLabel="false">
+              <FormItem v-if="data.sid" :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Mã số sinh viên</span>
                   <input type="text" readonly v-model="data.sid" />
                 </div>
               </FormItem>
-              <FormItem :showLabel="false">
+              <FormItem v-if="data.date_of_birth" :showLabel="false">
                 <div class="readOnlyField">
                   <span class="fieldLabel">Ngày tháng năm sinh</span>
                   <input type="text" readonly v-model="data.date_of_birth" />
@@ -67,7 +67,11 @@
                   <input type="text" readonly v-model="data.email" />
                 </div>
               </FormItem>
-              <FormItem single :showLabel="false">
+              <FormItem
+                :class="data.school_name ? 'fullwidth' : ''"
+                single
+                :showLabel="false"
+              >
                 <center>
                   <Button block color="primary">Cập nhật</Button>
                 </center>
@@ -115,5 +119,9 @@ export default {
 }
 .h-form > .h-form-item:last-of-type button {
   width: 25%;
+}
+
+.h-form.h-form-threecolumn .h-form-item.fullwidth {
+  width: 100%;
 }
 </style>
